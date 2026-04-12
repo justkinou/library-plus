@@ -8,6 +8,7 @@ var connectionString = builder.Configuration.GetSection("MongoDbSettings:Connect
 
 builder.Services.AddSingleton<IMongoClient>(new MongoClient(connectionString));
 builder.Services.AddSingleton<UserService>();
+builder.Services.AddSingleton<AuthService>();
 
 var app = builder.Build();
 
