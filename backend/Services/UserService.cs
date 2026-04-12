@@ -39,7 +39,7 @@ public class UserService
 
     public async Task<User?> VerifyUserLogin(string email, string password)
     {
-        var user = await _users.Find(u => u.Email == email).FirstOrDefaultAsync();
+        var user = await _users.Find(u => u.Email == email && !u.IsDeleted).FirstOrDefaultAsync();
 
         if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
         {
@@ -51,7 +51,7 @@ public class UserService
 
     public async Task<User?> GetUserByRefreshToken(string refreshToken)
     {
-        return await _users.Find(u => u.RefreshToken == refreshToken).FirstOrDefaultAsync();
+        return await _users.Find(u => u.RefreshToken == refreshToken && !u.IsDeleted).FirstOrDefaultAsync();
     }
 
     public async Task UpdateUser(User user)
