@@ -5,7 +5,7 @@ public record SignupRequest(
     string Password,
     string Name,
     string PhoneNumber,
-    string AvatarURL);
+    string AvatarUrl);
 
 public record LoginRequest(
 string Email,
