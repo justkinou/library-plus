@@ -1,11 +1,8 @@
-
-
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using LibraryPlus.Models;
 using LibraryPlus.UserRequests;
-using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.IdentityModel.Tokens;
 
 namespace LibraryPlus.Services;

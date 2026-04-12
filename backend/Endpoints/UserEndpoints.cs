@@ -2,7 +2,6 @@ using System.Security.Claims;
 using LibraryPlus.Services;
 using LibraryPlus.UserRequests;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Options;
 
 namespace LibraryPlus.Endpoints;
 
@@ -24,7 +23,7 @@ public static class UserEndpoints
             return Results.Ok(new { Message = "User created successfully" });
         });
 
-        group.MapPost("/login", async (LoginRequest request, AuthService authService) =>
+        group.MapPost("/login", async (LoginRequest request, AuthService authService, HttpContext context) =>
         {
             var tokens = await authService.LoginAsync(request);
 
@@ -33,19 +32,29 @@ public static class UserEndpoints
                 return Results.Unauthorized();
             }
 
-            return Results.Ok(tokens);
+            context.Response.Cookies.Append("accessToken", tokens.AccessToken,
+                new CookieOptions { HttpOnly = true, Secure = true, SameSite = SameSiteMode.Strict, Expires = DateTime.UtcNow.AddMinutes(15) });
+
+            context.Response.Cookies.Append("refreshToken", tokens.RefreshToken,
+                new CookieOptions { HttpOnly = true, Secure = true, SameSite = SameSiteMode.Strict, Expires = DateTime.UtcNow.AddDays(7) });
+
+            return Results.Ok(new { Message = "Logged in successfully" });
         });
 
-        group.MapPost("/refresh", async (RefreshRequest request, AuthService authService) =>
+        group.MapPost("/refresh", async (AuthService authService, HttpContext context) =>
         {
-            var response = await authService.RefreshTokenAsync(request);
+            var refreshToken = context.Request.Cookies["refreshToken"];
 
-            if (response == null)
-            {
-                return Results.Unauthorized();
-            }
+            if (string.IsNullOrEmpty(refreshToken)) return Results.Unauthorized();
 
-            return Results.Ok(response);
+            var response = await authService.RefreshTokenAsync(new RefreshRequest(refreshToken));
+
+            if (response == null) return Results.Unauthorized();
+
+            context.Response.Cookies.Append("accessToken", response.AccessToken,
+                new CookieOptions { HttpOnly = true, Secure = true, SameSite = SameSiteMode.Strict, Expires = DateTime.UtcNow.AddMinutes(15) });
+
+            return Results.Ok(new { Message = "Token refreshed successfully" });
         });
 
         group.MapGet("/welcome", [Authorize] (ClaimsPrincipal user) =>
@@ -55,9 +64,17 @@ public static class UserEndpoints
             return Results.Ok(new { Message = $"Welcome, {userEmail}!" });
         });
 
-        group.MapPost("/logout", async (LogoutRequest request, AuthService authService) =>
+        group.MapPost("/logout", async (AuthService authService, HttpContext context) =>
         {
-            await authService.LogoutAsync(request.RefreshToken);
+            var refreshToken = context.Request.Cookies["refreshToken"];
+
+            if (!string.IsNullOrEmpty(refreshToken))
+            {
+                await authService.LogoutAsync(refreshToken);
+            }
+
+            context.Response.Cookies.Delete("accessToken");
+            context.Response.Cookies.Delete("refreshToken");
 
             return Results.Ok(new { Message = "Logged out successfully" });
         });
