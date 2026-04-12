@@ -42,7 +42,10 @@ public class AuthService(UserService userService, IConfiguration config)
     {
         var user = await _userService.GetUserByRefreshToken(request.RefreshToken);
 
-        if (user == null || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+        if (user == null ||
+            string.IsNullOrEmpty(user.RefreshToken) ||
+            !user.RefreshTokenExpiryTime.HasValue ||
+            user.RefreshTokenExpiryTime.Value <= DateTime.UtcNow)
         {
             return null;
         }
