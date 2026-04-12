@@ -37,4 +37,15 @@ public class UserService
         await _users.InsertOneAsync(newUser);
     }
 
+    public async Task<User?> VerifyUserLogin(string email, string password)
+    {
+        var user = await _users.Find(u => u.Email == email).FirstOrDefaultAsync();
+
+        if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+        {
+            return null;
+        }
+
+        return user;
+    }
 }

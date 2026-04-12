@@ -1,13 +1,16 @@
-using MongoDB.Bson;
+using LibraryPlus.Endpoints;
+using LibraryPlus.Services;
 using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetSection("MongoDbSettings:ConnectionString").Value;
-var databaseName = builder.Configuration.GetSection("MongoDbSettings:DatabaseName").Value;
 
 builder.Services.AddSingleton<IMongoClient>(new MongoClient(connectionString));
+builder.Services.AddSingleton<UserService>();
 
 var app = builder.Build();
+
+app.MapUserEndpoints();
 
 app.Run();
