@@ -10,16 +10,17 @@ public static class AuthExtensions
     {
         var jwtKey = config["Jwt:Key"];
         var jwtIssuer = config["Jwt:Issuer"];
+        var jwtAudience = config["Jwt:Audience"];
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
         {
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
-                ValidateAudience = false,
+                ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                ValidIssuer = jwtIssuer,
+                ValidIssuer = jwtAudience,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey!))
             };
 

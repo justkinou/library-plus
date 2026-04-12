@@ -7,16 +7,10 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace LibraryPlus.Services;
 
-public class AuthService
+public class AuthService(UserService userService, IConfiguration config)
 {
-    private readonly UserService _userService;
-    private readonly IConfiguration _config;
-
-    public AuthService(UserService userService, IConfiguration config)
-    {
-        _userService = userService;
-        _config = config;
-    }
+    private readonly UserService _userService = userService;
+    private readonly IConfiguration _config = config;
 
     public async Task<bool> RegisterUserAsync(SignupRequest request)
     {
@@ -44,7 +38,7 @@ public class AuthService
         return new TokenResponse(accessToken, refreshToken);
     }
 
-    public async Task<UserRequests.AccessTokenResponse?> RefreshTokenAsync(RefreshRequest request)
+    public async Task<AccessTokenResponse?> RefreshTokenAsync(RefreshRequest request)
     {
         var user = await _userService.GetUserByRefreshToken(request.RefreshToken);
 
@@ -55,10 +49,10 @@ public class AuthService
 
         var newAccessToken = GenerateJwtToken(user);
 
-        return new UserRequests.AccessTokenResponse(newAccessToken);
+        return new AccessTokenResponse(newAccessToken);
     }
 
-    private string GenerateRefreshToken()
+    private static string GenerateRefreshToken()
     {
         var randomNumber = new byte[32];
         using var rng = System.Security.Cryptography.RandomNumberGenerator.Create();
@@ -74,13 +68,14 @@ public class AuthService
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Subject = new System.Security.Claims.ClaimsIdentity(new[]
-            {
+            Subject = new ClaimsIdentity(
+            [
                 new Claim(ClaimTypes.Name, user.Email),
                 new Claim(ClaimTypes.NameIdentifier, user.Id)
-            }),
+            ]),
             Expires = DateTime.UtcNow.AddMinutes(15),
             Issuer = _config["Jwt:Issuer"],
+            Audience = _config["Jwt:Audience"],
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature
             )
