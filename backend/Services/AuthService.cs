@@ -92,4 +92,21 @@ public class AuthService
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
     }
+
+    public async Task<bool> LogoutAsync(string refreshToken)
+    {
+        var user = await _userService.GetUserByRefreshToken(refreshToken);
+
+        if (user == null)
+        {
+            return true;
+        }
+
+        user.RefreshToken = null;
+        user.RefreshTokenExpiryTime = null;
+
+        await _userService.UpdateUser(user);
+
+        return true;
+    }
 }

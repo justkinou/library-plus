@@ -54,5 +54,12 @@ public static class UserEndpoints
 
             return Results.Ok(new { Message = $"Welcome, {userEmail}!" });
         });
+
+        group.MapPost("/logout", async (LogoutRequest request, AuthService authService) =>
+        {
+            await authService.LogoutAsync(request.RefreshToken);
+
+            return Results.Ok(new { Message = "Logged out successfully" });
+        });
     }
 }
