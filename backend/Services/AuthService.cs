@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using LibraryPlus.Models;
 using LibraryPlus.UserRequests;
@@ -11,6 +12,15 @@ public class AuthService(UserService userService, IConfiguration config)
 {
     private readonly UserService _userService = userService;
     private readonly IConfiguration _config = config;
+
+    private static string HashToken(string token)
+    {
+        using var sha256 = SHA256.Create();
+        var bytes = Encoding.UTF8.GetBytes(token);
+        var hashBytes = sha256.ComputeHash(bytes);
+
+        return Convert.ToBase64String(hashBytes);
+    }
 
     public async Task<bool> RegisterUserAsync(SignupRequest request)
     {
@@ -29,18 +39,19 @@ public class AuthService(UserService userService, IConfiguration config)
         if (user == null) return null;
 
         var accessToken = GenerateJwtToken(user);
-        var refreshToken = GenerateRefreshToken();
+        var plainTextRefreshToken = GenerateRefreshToken();
 
-        user.RefreshToken = refreshToken;
+        user.RefreshToken = HashToken(plainTextRefreshToken);
         user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
         await _userService.UpdateUser(user);
 
-        return new TokenResponse(accessToken, refreshToken);
+        return new TokenResponse(accessToken, plainTextRefreshToken);
     }
 
     public async Task<AccessTokenResponse?> RefreshTokenAsync(RefreshRequest request)
     {
-        var user = await _userService.GetUserByRefreshToken(request.RefreshToken);
+        var hashedToken = HashToken(request.RefreshToken);
+        var user = await _userService.GetUserByRefreshToken(hashedToken);
 
         if (user == null ||
             string.IsNullOrEmpty(user.RefreshToken) ||
@@ -90,7 +101,8 @@ public class AuthService(UserService userService, IConfiguration config)
 
     public async Task<bool> LogoutAsync(string refreshToken)
     {
-        var user = await _userService.GetUserByRefreshToken(refreshToken);
+        var hashedToken = HashToken(refreshToken);
+        var user = await _userService.GetUserByRefreshToken(hashedToken);
 
         if (user == null)
         {
