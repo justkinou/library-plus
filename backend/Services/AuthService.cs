@@ -47,7 +47,7 @@ public class AuthService
         return new TokenResponse(accessToken, refreshToken);
     }
 
-    public async Task<TokenResponse?> RefreshTokenAsync(RefreshRequest request)
+    public async Task<UserRequests.AccessTokenResponse?> RefreshTokenAsync(RefreshRequest request)
     {
         var user = await _userService.GetUserByRefreshToken(request.RefreshToken);
 
@@ -57,13 +57,8 @@ public class AuthService
         }
 
         var newAccessToken = GenerateJwtToken(user);
-        var newRefreshToken = GenerateRefreshToken();
 
-        user.RefreshToken = newRefreshToken;
-        user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
-        await _userService.UpdateUser(user);
-
-        return new TokenResponse(newAccessToken, newRefreshToken);
+        return new UserRequests.AccessTokenResponse(newAccessToken);
     }
 
     private string GenerateRefreshToken()

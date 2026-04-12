@@ -36,14 +36,14 @@ public static class UserEndpoints
 
         group.MapPost("/refresh", async (RefreshRequest request, AuthService authService) =>
         {
-            var tokens = await authService.RefreshTokenAsync(request);
+            var response = await authService.RefreshTokenAsync(request);
 
-            if (tokens == null)
+            if (response == null)
             {
                 return Results.Unauthorized();
             }
 
-            return Results.Ok(tokens);
+            return Results.Ok(response);
         });
     }
 }

@@ -1,4 +1,5 @@
 using LibraryPlus.Endpoints;
+using LibraryPlus.Extensions;
 using LibraryPlus.Services;
 using MongoDB.Driver;
 
@@ -10,7 +11,12 @@ builder.Services.AddSingleton<IMongoClient>(new MongoClient(connectionString));
 builder.Services.AddSingleton<UserService>();
 builder.Services.AddSingleton<AuthService>();
 
+builder.Services.AddJwtAuthentication(builder.Configuration);
+
 var app = builder.Build();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapUserEndpoints();
 
