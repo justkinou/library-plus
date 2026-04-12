@@ -1,6 +1,8 @@
-using LibraryPlus.Models;
+using System.Security.Claims;
 using LibraryPlus.Services;
 using LibraryPlus.UserRequests;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Options;
 
 namespace LibraryPlus.Endpoints;
 
@@ -44,6 +46,13 @@ public static class UserEndpoints
             }
 
             return Results.Ok(response);
+        });
+
+        group.MapGet("/welcome", [Authorize] (ClaimsPrincipal user) =>
+        {
+            var userEmail = user.Identity?.Name;
+
+            return Results.Ok(new { Message = $"Welcome, {userEmail}!" });
         });
     }
 }
