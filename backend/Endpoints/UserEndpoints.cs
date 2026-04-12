@@ -24,14 +24,26 @@ public static class UserEndpoints
 
         group.MapPost("/login", async (LoginRequest request, AuthService authService) =>
         {
-            var token = await authService.LoginAsync(request);
+            var tokens = await authService.LoginAsync(request);
 
-            if (token == null)
+            if (tokens == null)
             {
                 return Results.Unauthorized();
             }
 
-            return Results.Ok(new { Token = token });
+            return Results.Ok(tokens);
+        });
+
+        group.MapPost("/refresh", async (RefreshRequest request, AuthService authService) =>
+        {
+            var tokens = await authService.RefreshTokenAsync(request);
+
+            if (tokens == null)
+            {
+                return Results.Unauthorized();
+            }
+
+            return Results.Ok(tokens);
         });
     }
 }

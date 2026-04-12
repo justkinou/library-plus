@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using LibraryPlus.Models;
 using LibraryPlus.UserRequests;
+using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.IdentityModel.Tokens;
 
 namespace LibraryPlus.Services;
@@ -31,16 +32,47 @@ public class AuthService
         return true;
     }
 
-    public async Task<string?> LoginAsync(LoginRequest request)
+    public async Task<TokenResponse?> LoginAsync(LoginRequest request)
     {
         var user = await _userService.VerifyUserLogin(request.Email, request.Password);
+        if (user == null) return null;
 
-        if (user == null)
+        var accessToken = GenerateJwtToken(user);
+        var refreshToken = GenerateRefreshToken();
+
+        user.RefreshToken = refreshToken;
+        user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+        await _userService.UpdateUser(user);
+
+        return new TokenResponse(accessToken, refreshToken);
+    }
+
+    public async Task<TokenResponse?> RefreshTokenAsync(RefreshRequest request)
+    {
+        var user = await _userService.GetUserByRefreshToken(request.RefreshToken);
+
+        if (user == null || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
         {
             return null;
         }
 
-        return GenerateJwtToken(user);
+        var newAccessToken = GenerateJwtToken(user);
+        var newRefreshToken = GenerateRefreshToken();
+
+        user.RefreshToken = newRefreshToken;
+        user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+        await _userService.UpdateUser(user);
+
+        return new TokenResponse(newAccessToken, newRefreshToken);
+    }
+
+    private string GenerateRefreshToken()
+    {
+        var randomNumber = new byte[32];
+        using var rng = System.Security.Cryptography.RandomNumberGenerator.Create();
+        rng.GetBytes(randomNumber);
+
+        return Convert.ToBase64String(randomNumber);
     }
 
     private string GenerateJwtToken(User user)
@@ -55,7 +87,7 @@ public class AuthService
                 new Claim(ClaimTypes.Name, user.Email),
                 new Claim(ClaimTypes.NameIdentifier, user.Id)
             }),
-            Expires = DateTime.UtcNow.AddHours(2),
+            Expires = DateTime.UtcNow.AddMinutes(15),
             Issuer = _config["Jwt:Issuer"],
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature

@@ -48,4 +48,14 @@ public class UserService
 
         return user;
     }
+
+    public async Task<User?> GetUserByRefreshToken(string refreshToken)
+    {
+        return await _users.Find(u => u.RefreshToken == refreshToken).FirstOrDefaultAsync();
+    }
+
+    public async Task UpdateUser(User user)
+    {
+        await _users.ReplaceOneAsync(u => u.Id == user.Id, user);
+    }
 }
