@@ -28,7 +28,7 @@ public class UserService
             Email = request.Email,
             Name = request.Name,
             PhoneNumber = request.PhoneNumber,
-            AvatarUrl = request.AvatarURL,
+            AvatarUrl = request.AvatarUrl,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
             JoinedAt = DateTime.UtcNow,
             IsDeleted = false
