@@ -1,6 +1,7 @@
 import { Rubik } from "next/font/google";
 import './globals.css';
 import Header from "@/components/header/header";
+import { ThemeProvider } from "next-themes";
 
 const rubik = Rubik({subsets:['latin'], variable:'--font-mono'});
 
@@ -9,13 +10,16 @@ function layout({ children }: { children: React.ReactNode }) {
     <html
       lang="en"
       className={`${rubik.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col px-6">
-        <Header />
+        <body className="min-h-full flex flex-col px-6">
+          <ThemeProvider attribute="class">
+            <Header />
 
-        {children}
-      </body>
-    </html>
+            {children}
+          </ThemeProvider>
+        </body>
+      </html>
   )
 }
 
