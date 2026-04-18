@@ -127,7 +127,7 @@ export default function page() {
 
         <div className="flex flex-col gap-2 items-center">
           <Link href="/sign-up" className="underline">Dont have an account yet?</Link>
-          <Link href="/reset-password" className="underline">Forgot your password?</Link>
+          <Link href="/password-reset" className="underline">Forgot your password?</Link>
         </div>
       </CardFooter>
     </Card>
