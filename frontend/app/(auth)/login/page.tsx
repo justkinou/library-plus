@@ -13,7 +13,7 @@ import {
 import { Field, FieldError, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group"
-import { loginFormSchema, LoginFormSchema } from "@/forms/login"
+import { loginFormSchema, LoginFormSchema } from "@/forms/auth"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { EyeClosedIcon, EyeIcon } from "@phosphor-icons/react"
 import Link from "next/link"
@@ -35,10 +35,9 @@ export default function page() {
   const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = async (data: LoginFormSchema) => {
-    const { error } = await handleLogin(data);
-
+    const error = await handleLogin(data);
     if (error === null) {
-      toast.success("Login successfully");
+      toast.success("Logged in successfully");
       router.replace("/");
     } else {
       toast.error("Failed to login", {

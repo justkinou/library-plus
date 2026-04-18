@@ -1,5 +1,6 @@
 "use client"
 
+import { handleLogin, handleSignUp } from "@/actions/auth"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -12,36 +13,14 @@ import {
 import { Field, FieldError, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group"
+import { formSchema, SignUpFormSchema } from "@/forms/auth"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { EyeClosedIcon, EyeIcon } from "@phosphor-icons/react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
-import * as z from 'zod'
-
-const formSchema = z.object({
-  email: z.email("Must be a valid email"),
-  password: z
-    .string()
-    .nonempty("Password is required")
-    .min(8, "Must be at least 8 character long")
-    .max(64, "Must be shorter than 64 characters")
-    .regex(/[a-z]/, "Must include at least 1 lowercase character")
-    .regex(/[A-Z]/, "Must include at least 1 uppercase character")
-    .regex(/[0-9]/, "Must include at least 1 digit")
-    .regex(/[^a-zA-Z0-9]/, "Must include at least 1 special character"),
-  passwordConfirmation: z.string(),
-}).superRefine(({ password, passwordConfirmation }, ctx) => {
-  if (password !== passwordConfirmation) {
-    ctx.addIssue({
-      code: "custom",
-      message: "Passwords do not match",
-      path: ["passwordConfirmation"],
-    })
-  }
-});
-
-type SignUpFormSchema = z.infer<typeof formSchema>;
+import { toast } from "sonner"
 
 export default function page() {
   const form = useForm<SignUpFormSchema>({
@@ -53,11 +32,26 @@ export default function page() {
       passwordConfirmation: "",
     },
   });
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
 
-  const onSubmit = (data: SignUpFormSchema) => {
-    console.log({ data })
+  const onSubmit = async (data: SignUpFormSchema) => {
+    const error = await handleSignUp(data);
+    if (error === null) {
+      const loginError = await handleLogin(data);
+      if (loginError === null) {
+        toast.success("Logged in successfully");
+        router.replace("/");
+      } else {
+        toast.success("Signed up successfully");
+        router.push("/login");
+      }
+    } else {
+      toast.error("Failed to sign up", {
+        description: `Reason: ${error}`,
+      });
+    }
   }
 
   return (
@@ -69,7 +63,7 @@ export default function page() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form id="sign-up-form" onSubmit={form.handleSubmit(onSubmit)}>
           <FieldSet className="flex flex-col gap-6">
             <FieldGroup>
               <Controller
@@ -167,6 +161,7 @@ export default function page() {
       </CardContent>
       <CardFooter className="flex-col gap-4">
         <Button
+          form="sign-up-form"
           type="submit"
           className="w-full
           cursor-pointer"
