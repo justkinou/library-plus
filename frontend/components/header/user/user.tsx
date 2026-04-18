@@ -8,8 +8,6 @@ async function HeaderUser() {
 
   return (
     <div className="flex gap-2 items-center cursor-pointer transition-colors hover:text-gray-400">
-        
-
         { !isAuthenticated ?
           <HeaderLoginLink />
           : <>Username</>

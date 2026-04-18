@@ -29,32 +29,43 @@ const formSchema = z.object({
     .regex(/[a-z]/, "Must include at least 1 lowercase character")
     .regex(/[A-Z]/, "Must include at least 1 uppercase character")
     .regex(/[0-9]/, "Must include at least 1 digit")
-    .regex(/[^a-zA-Z0-9]/, "Must include at least 1 special character")
+    .regex(/[^a-zA-Z0-9]/, "Must include at least 1 special character"),
+  passwordConfirmation: z.string(),
+}).superRefine(({ password, passwordConfirmation }, ctx) => {
+  if (password !== passwordConfirmation) {
+    ctx.addIssue({
+      code: "custom",
+      message: "Passwords do not match",
+      path: ["passwordConfirmation"],
+    })
+  }
 });
 
-type LoginFormSchema = z.infer<typeof formSchema>;
+type SignUpFormSchema = z.infer<typeof formSchema>;
 
 export default function page() {
-  const form = useForm<LoginFormSchema>({
+  const form = useForm<SignUpFormSchema>({
     resolver: zodResolver(formSchema),
     mode: "onChange",
     defaultValues: {
       email: "",
       password: "",
+      passwordConfirmation: "",
     },
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
 
-  const onSubmit = (data: LoginFormSchema) => {
+  const onSubmit = (data: SignUpFormSchema) => {
     console.log({ data })
   }
 
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
-        <CardTitle>Login to your account</CardTitle>
+        <CardTitle>Sign up to Library+</CardTitle>
         <CardDescription>
-          Enter your email below to login to your account
+          Enter your email and password below to sign up
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -116,18 +127,51 @@ export default function page() {
                   </Field>
                 )}
               />
+
+              <Controller
+                name="passwordConfirmation"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor={field.name}>Password confirmation</FieldLabel>
+                    <InputGroup
+                      className="bg-background"
+                    >
+                      <InputGroupInput
+                        { ...field }
+                        id={field.name}
+                        aria-invalid={fieldState.invalid}
+                        placeholder="Enter the password again"
+                        autoComplete="off"
+                        type={showPasswordConfirmation ? "text" : "password"}
+                        required
+                        autoFocus
+                      />
+                      <InputGroupAddon align="inline-end">
+                        <InputGroupButton
+                          size="icon-sm"
+                          className="cursor-pointer"
+                          onClick={() => setShowPasswordConfirmation(prev => !prev)}
+                        >
+                          {showPasswordConfirmation ? <EyeClosedIcon /> : <EyeIcon />}
+                        </InputGroupButton>
+                      </InputGroupAddon>
+                    </InputGroup>
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
+                )}
+              />
             </FieldGroup>
           </FieldSet>
         </form>
       </CardContent>
       <CardFooter className="flex-col gap-4">
         <Button type="submit" className="w-full cursor-pointer" disabled={!form.formState.isValid}>
-          Login
+          Sign up
         </Button>
-
+        
         <div className="flex flex-col gap-2 items-center">
-          <Link href="/sign-up" className="underline">Dont have an account yet?</Link>
-          <Link href="/reset-password" className="underline">Forgot your password?</Link>
+          <Link href="/login" className="underline">Already have an account?</Link>
         </div>
       </CardFooter>
     </Card>
