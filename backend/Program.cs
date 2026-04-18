@@ -2,6 +2,10 @@ using LibraryPlus.Endpoints;
 using LibraryPlus.Extensions;
 using LibraryPlus.Services;
 using MongoDB.Driver;
+using System.IdentityModel.Tokens.Jwt;
+
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
 
 var builder = WebApplication.CreateBuilder(args);
 

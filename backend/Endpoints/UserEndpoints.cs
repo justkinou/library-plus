@@ -32,11 +32,27 @@ public static class UserEndpoints
                 return Results.Unauthorized();
             }
 
-            context.Response.Cookies.Append("accessToken", tokens.AccessToken,
-                new CookieOptions { HttpOnly = true, Secure = true, SameSite = SameSiteMode.Strict, Expires = DateTime.UtcNow.AddMinutes(15) });
+            context.Response.Cookies.Append(
+                "accessToken",
+                tokens.AccessToken,
+                new CookieOptions {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTime.UtcNow.AddMinutes(15)
+                }
+            );
 
-            context.Response.Cookies.Append("refreshToken", tokens.RefreshToken,
-                new CookieOptions { HttpOnly = true, Secure = true, SameSite = SameSiteMode.Strict, Expires = DateTime.UtcNow.AddDays(7) });
+            context.Response.Cookies.Append(
+                "refreshToken",
+                tokens.RefreshToken,
+                new CookieOptions {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTime.UtcNow.AddDays(7)
+                }
+            );
 
             return Results.Ok(new { Message = "Logged in successfully" });
         });

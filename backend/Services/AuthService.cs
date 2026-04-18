@@ -69,7 +69,7 @@ public class AuthService(UserService userService, IConfiguration config)
     private static string GenerateRefreshToken()
     {
         var randomNumber = new byte[32];
-        using var rng = System.Security.Cryptography.RandomNumberGenerator.Create();
+        using var rng = RandomNumberGenerator.Create();
         rng.GetBytes(randomNumber);
 
         return Convert.ToBase64String(randomNumber);
@@ -84,8 +84,9 @@ public class AuthService(UserService userService, IConfiguration config)
         {
             Subject = new ClaimsIdentity(
             [
-                new Claim(ClaimTypes.Name, user.Email),
-                new Claim(ClaimTypes.NameIdentifier, user.Id)
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim("avatarUrl", user.AvatarUrl ?? ""),
             ]),
             Expires = DateTime.UtcNow.AddMinutes(15),
             Issuer = _config["Jwt:Issuer"],
