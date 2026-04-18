@@ -1,5 +1,6 @@
 "use client"
 
+import { handleLogin } from "@/actions/auth"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -12,41 +13,38 @@ import {
 import { Field, FieldError, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group"
+import { loginFormSchema, LoginFormSchema } from "@/forms/login"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { EyeClosedIcon, EyeIcon } from "@phosphor-icons/react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
-import * as z from 'zod'
-
-const formSchema = z.object({
-  email: z.email("Must be a valid email"),
-  password: z
-    .string()
-    .nonempty("Password is required")
-    .min(8, "Must be at least 8 character long")
-    .max(64, "Must be shorter than 64 characters")
-    .regex(/[a-z]/, "Must include at least 1 lowercase character")
-    .regex(/[A-Z]/, "Must include at least 1 uppercase character")
-    .regex(/[0-9]/, "Must include at least 1 digit")
-    .regex(/[^a-zA-Z0-9]/, "Must include at least 1 special character")
-});
-
-type LoginFormSchema = z.infer<typeof formSchema>;
+import { toast } from "sonner"
 
 export default function page() {
   const form = useForm<LoginFormSchema>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(loginFormSchema),
     mode: "onChange",
     defaultValues: {
       email: "",
       password: "",
     },
   });
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
-  const onSubmit = (data: LoginFormSchema) => {
-    console.log({ data })
+  const onSubmit = async (data: LoginFormSchema) => {
+    const { error } = await handleLogin(data);
+
+    if (error === null) {
+      toast.success("Login successfully");
+      router.replace("/");
+    } else {
+      toast.error("Failed to login", {
+        description: `Reason: ${error}`,
+      });
+    }
   }
 
   return (
@@ -58,7 +56,7 @@ export default function page() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form id="login-form" onSubmit={form.handleSubmit(onSubmit)}>
           <FieldSet className="flex flex-col gap-6">
             <FieldGroup>
               <Controller
@@ -73,7 +71,7 @@ export default function page() {
                       aria-invalid={fieldState.invalid}
                       placeholder="example@mail.com"
                       className="bg-background"
-                      autoComplete="off"
+                      autoComplete="on"
                       type="email"
                       required
                       autoFocus
@@ -121,9 +119,11 @@ export default function page() {
         </form>
       </CardContent>
       <CardFooter className="flex-col gap-4">
-        <Button type="submit" className="w-full cursor-pointer" disabled={!form.formState.isValid}>
-          Login
-        </Button>
+        <Button
+          form="login-form"
+          type="submit"
+          className="w-full cursor-pointer"
+        >Login</Button>
 
         <div className="flex flex-col gap-2 items-center">
           <Link href="/sign-up" className="underline">Dont have an account yet?</Link>

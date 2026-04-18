@@ -71,9 +71,11 @@ export default function page() {
         </form>
       </CardContent>
       <CardFooter className="flex-col gap-4">
-        <Button type="submit" className="w-full cursor-pointer" disabled={!form.formState.isValid}>
-          Reset password
-        </Button>
+        <Button
+          type="submit"
+          className="w-full
+          cursor-pointer"
+        >Reset password</Button>
 
         <div className="flex flex-col gap-2 items-center">
           <Link href="/login" className="underline">Go back to the login page</Link>

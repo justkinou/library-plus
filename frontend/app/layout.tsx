@@ -2,6 +2,7 @@ import { Rubik } from "next/font/google";
 import './globals.css';
 import Header from "@/components/header/header";
 import { ThemeProvider } from "next-themes";
+import { CustomToaster } from "@/components/Toaster/CustomToaster";
 
 const rubik = Rubik({subsets:['latin'], variable:'--font-mono'});
 
@@ -17,6 +18,8 @@ function layout({ children }: { children: React.ReactNode }) {
             <Header />
 
             {children}
+            
+            <CustomToaster />
           </ThemeProvider>
         </body>
       </html>

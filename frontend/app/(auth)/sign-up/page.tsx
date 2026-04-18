@@ -84,7 +84,7 @@ export default function page() {
                       aria-invalid={fieldState.invalid}
                       placeholder="example@mail.com"
                       className="bg-background"
-                      autoComplete="off"
+                      autoComplete="on"
                       type="email"
                       required
                       autoFocus
@@ -166,9 +166,12 @@ export default function page() {
         </form>
       </CardContent>
       <CardFooter className="flex-col gap-4">
-        <Button type="submit" className="w-full cursor-pointer" disabled={!form.formState.isValid}>
-          Sign up
-        </Button>
+        <Button
+          type="submit"
+          className="w-full
+          cursor-pointer"
+        >Sign up</Button>
+
         
         <div className="flex flex-col gap-2 items-center">
           <Link href="/login" className="underline">Already have an account?</Link>
