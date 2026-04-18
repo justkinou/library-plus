@@ -1,4 +1,2 @@
-const base = process.env.API_URL
-
-export const loginEndpoint = `${base}/users/login`
-export const signUpEndpoint = `${base}/users/signup`
+export const loginEndpoint = `/api/users/login`
+export const signUpEndpoint = `/api/users/signup`

@@ -1,6 +1,5 @@
 "use client"
 
-import { handleLogin } from "@/actions/auth"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -14,6 +13,7 @@ import { Field, FieldError, FieldGroup, FieldLabel, FieldSet } from "@/component
 import { Input } from "@/components/ui/input"
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group"
 import { loginFormSchema, LoginFormSchema } from "@/forms/auth"
+import { handleLogin } from "@/lib/api/auth"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { EyeClosedIcon, EyeIcon } from "@phosphor-icons/react"
 import Link from "next/link"
@@ -38,7 +38,7 @@ export default function page() {
     const error = await handleLogin(data);
     if (error === null) {
       toast.success("Logged in successfully");
-      router.replace("/");
+      window.location.assign("/");
     } else {
       toast.error("Failed to login", {
         description: `Reason: ${error}`,
