@@ -1,15 +1,25 @@
-import { getUserDataFromAccessToken } from '@/lib/auth/user';
-import { cookies } from 'next/headers';
+import { MeResponseDTO } from '@/types/user/dto';
 import React from 'react'
+import HeaderUserMenuAvatar from './user-menu-avatar';
+import { serverFetch } from '@/lib/server/fetch';
 
 async function HeaderUserMenu() {
-  const cookieStore = await cookies();
-  const accessToken = cookieStore.get("accessToken")?.value!;
-  const userData = getUserDataFromAccessToken(accessToken);
-  const username = userData.name?.length === 0 ? userData.email : userData.name;
+  const response = await serverFetch(`/user/me`, {
+    method: "GET",
+  });
+
+  if (!response.ok) {
+    console.log(response.status, response.statusText);
+    return <span>error</span>
+  }
+
+  const userData: MeResponseDTO = await response.json();
 
   return (
-    <span>{ username }</span>
+    <div className="flex gap-2 items-center cursor-pointer transition-colors hover:text-gray-400">
+      <HeaderUserMenuAvatar avatarUrl={userData.avatarUrl}  />
+      <span>{ userData.name ?? userData.email }</span>
+    </div>
   )
 }
 

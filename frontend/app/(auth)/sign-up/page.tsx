@@ -37,6 +37,10 @@ export default function page() {
   const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
 
   const onSubmit = async (data: SignUpFormSchema) => {
+    if (data.password !== data.passwordConfirmation) {
+      return;
+    }
+    
     const error = await handleSignUp(data);
     if (error === null) {
       const loginError = await handleLogin(data);
