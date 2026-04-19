@@ -28,6 +28,6 @@ var app = builder.Build();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapUserEndpoints();
+app.MapAuthEndpoints();
 
 app.Run();

@@ -24,7 +24,7 @@ public class JwtService(IConfiguration config)
                 new Claim("email", user.Email),
                 new Claim("avatarUrl", user.AvatarUrl ?? ""),
             ]),
-            Expires = DateTime.UtcNow.AddMinutes(1),
+            Expires = DateTime.UtcNow.AddMinutes(15),
             Issuer = _config["Jwt:Issuer"],
             Audience = _config["Jwt:Audience"],
             SigningCredentials = new SigningCredentials(

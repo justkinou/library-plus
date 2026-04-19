@@ -1,16 +1,13 @@
-using System.Security.Claims;
-using LibraryPlus.Filters;
 using LibraryPlus.Services.Auth;
 using LibraryPlus.UserRequests;
-using Microsoft.AspNetCore.Authorization;
 
 namespace LibraryPlus.Endpoints;
 
 public static class UserEndpoints
 {
-    public static void MapUserEndpoints(this WebApplication app)
+    public static void MapAuthEndpoints(this WebApplication app)
     {
-        var group = app.MapGroup("/api/v1/users");
+        var group = app.MapGroup("/api/v1/auth");
 
         group.MapPost("/signup", async (SignupRequest request, AuthService authService) =>
         {
@@ -54,52 +51,6 @@ public static class UserEndpoints
 
             return Results.Ok(new { Message = "Logged in successfully" });
         });
-
-        group.MapPost("/refresh", async (HttpContext context, AuthService authService) =>
-        {
-            var refreshTokenPlain = context.Request.Cookies["refreshToken"];
-            if (string.IsNullOrEmpty(refreshTokenPlain))
-            {
-                return Results.Unauthorized();
-            }
-
-            var tokenResponse = await authService.RefreshTokenAsync(refreshTokenPlain);
-            if (tokenResponse == null)
-            {
-                return Results.Unauthorized();
-            }
-
-            context.Response.Cookies.Append(
-                "accessToken",
-                tokenResponse.AccessToken,
-                new CookieOptions {
-                    HttpOnly = true,
-                    Secure = true,
-                    SameSite = SameSiteMode.Strict,
-                    Expires = DateTime.UtcNow.AddMinutes(15)
-                }
-            );
-
-            context.Response.Cookies.Append(
-                "refreshToken",
-                tokenResponse.RefreshToken,
-                new CookieOptions {
-                    HttpOnly = true,
-                    Secure = true,
-                    SameSite = SameSiteMode.Strict,
-                    Expires = DateTime.UtcNow.AddMinutes(15)
-                }
-            );
-
-            return Results.Ok(new { Message = "Token refreshed successfully" });
-        });
-
-        group.MapGet("/welcome", [Authorize] (ClaimsPrincipal user) =>
-        {
-            var userEmail = user.FindFirstValue("email");
-            var userName = user.FindFirstValue("name");
-            return Results.Ok(new { Message = $"Welcome, {userName} {userEmail}!" });
-        }).AddEndpointFilter<ActiveUserFilter>();
 
         group.MapPost("/logout", async (HttpContext context, AuthService authService) =>
         {
