@@ -1,4 +1,5 @@
 using LibraryPlus.Endpoints;
+using LibraryPlus.Endpoints.User;
 using LibraryPlus.Extensions;
 using LibraryPlus.Services;
 using LibraryPlus.Services.Auth;
@@ -29,5 +30,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapAuthEndpoints();
+app.MapUserEndpoints();
 
 app.Run();

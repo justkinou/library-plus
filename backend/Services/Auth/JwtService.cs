@@ -17,13 +17,7 @@ public class JwtService(IConfiguration config)
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity(
-            [
-                new Claim("sub", user.Id),
-                new Claim("name", user.Name ?? ""),
-                new Claim("email", user.Email),
-                new Claim("avatarUrl", user.AvatarUrl ?? ""),
-            ]),
+            Subject = new ClaimsIdentity([new Claim("sub", user.Id)]),
             Expires = DateTime.UtcNow.AddMinutes(15),
             Issuer = _config["Jwt:Issuer"],
             Audience = _config["Jwt:Audience"],
