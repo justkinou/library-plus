@@ -96,8 +96,8 @@ public static class UserEndpoints
 
         group.MapGet("/welcome", [Authorize] (ClaimsPrincipal user) =>
         {
-            var userEmail = user.FindFirstValue(ClaimTypes.Email);
-            var userName = user.FindFirstValue(ClaimTypes.Name);
+            var userEmail = user.FindFirstValue("email");
+            var userName = user.FindFirstValue("name");
             return Results.Ok(new { Message = $"Welcome, {userName} {userEmail}!" });
         }).AddEndpointFilter<ActiveUserFilter>();
 

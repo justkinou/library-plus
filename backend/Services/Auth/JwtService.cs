@@ -19,9 +19,9 @@ public class JwtService(IConfiguration config)
         {
             Subject = new ClaimsIdentity(
             [
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
-                new Claim(ClaimTypes.Name, user.Name ?? ""),
-                new Claim(ClaimTypes.Email, user.Email),
+                new Claim("sub", user.Id),
+                new Claim("name", user.Name ?? ""),
+                new Claim("email", user.Email),
                 new Claim("avatarUrl", user.AvatarUrl ?? ""),
             ]),
             Expires = DateTime.UtcNow.AddMinutes(1),

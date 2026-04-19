@@ -10,7 +10,8 @@ public class ActiveUserFilter(UserService userService) : IEndpointFilter
 
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
     {
-        var userId = context.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var userId = context.HttpContext.User.FindFirstValue("sub");
+
         if (userId == null)
         {
             return Results.Unauthorized();
