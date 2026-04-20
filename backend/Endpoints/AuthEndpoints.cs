@@ -60,15 +60,8 @@ public static class UserEndpoints
                 await authService.LogoutAsync(refreshToken);
             }
 
-            var cookieOptions = new CookieOptions
-            {
-                HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.Strict
-            };
-
-            context.Response.Cookies.Delete("accessToken", cookieOptions);
-            context.Response.Cookies.Delete("refreshToken", cookieOptions);
+            context.Response.Cookies.Delete("accessToken");
+            context.Response.Cookies.Delete("refreshToken");
 
             return Results.Ok(new { Message = "Logged out successfully" });
         });

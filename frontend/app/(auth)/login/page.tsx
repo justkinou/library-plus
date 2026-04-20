@@ -12,13 +12,13 @@ import {
 import { Field, FieldError, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group"
+import { userContext } from "@/context/userContext"
 import { loginFormSchema, LoginFormSchema } from "@/forms/auth"
-import { handleLogin } from "@/lib/api/auth"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { EyeClosedIcon, EyeIcon } from "@phosphor-icons/react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { toast } from "sonner"
 
@@ -32,13 +32,15 @@ export default function page() {
     },
   });
   const router = useRouter();
+  const { login, refreshUser } = useContext(userContext);
   const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = async (data: LoginFormSchema) => {
-    const error = await handleLogin(data);
+    const error = await login(data);
     if (error === null) {
       toast.success("Logged in successfully");
-      window.location.assign("/");
+      router.replace("/");
+      await refreshUser();
     } else {
       toast.error("Failed to login", {
         description: `Reason: ${error}`,

@@ -1,3 +1,3 @@
-export interface SignUpResponseDTO {
+export interface AuthResponseDTO {
     message: string;
 }

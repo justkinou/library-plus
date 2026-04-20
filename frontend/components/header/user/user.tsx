@@ -1,38 +1,21 @@
 "use client";
 
-import React, { useEffect, useState } from 'react'
+import React, { useContext } from 'react'
 import HeaderLoginLink from './login-link';
 import HeaderUserMenu from './user-menu';
-import { meEndpoint } from '@/constants/endpoints';
 import { Badge } from '@/components/ui/badge';
 import { Spinner } from '@/components/ui/spinner';
-import { UserData } from '@/types/user/UserData';
+import { userContext } from '@/context/userContext';
 
 function HeaderUser() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [userData, setUserData] = useState<UserData | null>(null);
-
-  useEffect(() => {
-    (async () => {
-      const response = await fetch(meEndpoint, {
-        method: "GET",
-      });
-
-      if (response.ok) {
-        setUserData(await response.json());
-      } else {
-        console.log({ status: response.status });
-      }
-      setIsLoading(false);
-    })();
-  }, []);
+  const { isLoading, userData } = useContext(userContext);
 
   if (isLoading) {
     return (
-      <div className="h-8 flex items-center justify-center">
-        <Badge className="bg-card">
+      <div className="flex items-center justify-center">
+        <Badge className="bg-card text-foreground h-8">
           <Spinner data-icon="inline-start" />
-          Loading
+          <span>Loading</span>
         </Badge>
       </div>
     );

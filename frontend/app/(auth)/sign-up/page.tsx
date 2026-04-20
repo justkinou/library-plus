@@ -12,13 +12,13 @@ import {
 import { Field, FieldError, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group"
+import { userContext } from "@/context/userContext"
 import { formSchema, SignUpFormSchema } from "@/forms/auth"
-import { handleLogin, handleSignUp } from "@/lib/api/auth"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { EyeClosedIcon, EyeIcon } from "@phosphor-icons/react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { toast } from "sonner"
 
@@ -32,6 +32,7 @@ export default function page() {
       passwordConfirmation: "",
     },
   });
+  const { signup, login, refreshUser } = useContext(userContext);
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
@@ -41,12 +42,13 @@ export default function page() {
       return;
     }
     
-    const error = await handleSignUp(data);
+    const error = await signup(data);
     if (error === null) {
-      const loginError = await handleLogin(data);
+      const loginError = await login(data);
       if (loginError === null) {
         toast.success("Logged in successfully");
-        window.location.assign("/");
+        router.replace("/");
+        await refreshUser();
       } else {
         toast.success("Signed up successfully");
         router.push("/login");
