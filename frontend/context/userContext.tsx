@@ -1,4 +1,3 @@
-import { loginEndpoint, logoutEndpoint, meEndpoint, signUpEndpoint } from "@/constants/endpoints";
 import { LoginFormSchema, SignUpFormSchema } from "@/forms/auth";
 import { AuthResponseDTO } from "@/types/auth/dto";
 import { UserData } from "@/types/user/UserData";
@@ -21,7 +20,7 @@ export const UserProvider = ({ children } : { children: React.ReactNode }) => {
 
   const refreshUser = async () => {
     setIsLoading(true);
-    const response = await fetch(meEndpoint, {
+    const response = await fetch("/api/user/me", {
       method: "GET",
     });
 
@@ -38,7 +37,7 @@ export const UserProvider = ({ children } : { children: React.ReactNode }) => {
   }, []);
 
   const login = async ({ email, password }: LoginFormSchema): Promise<string | null> => {
-    const response = await fetch(loginEndpoint, {
+    const response = await fetch("/api/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -54,7 +53,7 @@ export const UserProvider = ({ children } : { children: React.ReactNode }) => {
   };
 
   const signup = async ({ email, password }: SignUpFormSchema): Promise<string | null> => {
-    const response = await fetch(signUpEndpoint, {
+    const response = await fetch("/api/auth/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -71,7 +70,7 @@ export const UserProvider = ({ children } : { children: React.ReactNode }) => {
   };
 
   const logout = async (): Promise<string | null> => {
-    const response = await fetch(logoutEndpoint, {
+    const response = await fetch("/api/auth/logout", {
       method: "POST",
       headers: {
         "Accept": "application/json",
