@@ -1,14 +1,31 @@
 "use client";
 
-import { useContext } from 'react';
+import React, { useEffect, useState } from 'react'
 import HeaderLoginLink from './login-link';
 import HeaderUserMenu from './user-menu';
+import { meEndpoint } from '@/constants/endpoints';
 import { Badge } from '@/components/ui/badge';
 import { Spinner } from '@/components/ui/spinner';
-import { UserContext } from '@/context/userContext';
+import { UserData } from '@/types/user/UserData';
 
 function HeaderUser() {
-  const { userData, isLoading } = useContext(UserContext);
+  const [isLoading, setIsLoading] = useState(true);
+  const [userData, setUserData] = useState<UserData | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      const response = await fetch(meEndpoint, {
+        method: "GET",
+      });
+
+      if (response.ok) {
+        setUserData(await response.json());
+      } else {
+        console.log({ status: response.status });
+      }
+      setIsLoading(false);
+    })();
+  }, []);
 
   if (isLoading) {
     return (

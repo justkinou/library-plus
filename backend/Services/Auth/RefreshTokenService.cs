@@ -52,7 +52,6 @@ public class RefreshTokenService
         };
 
         await _refreshTokens.InsertOneAsync(refreshToken);
-
         return refreshTokenPlain;
     }
 

@@ -47,7 +47,6 @@ public class AuthService(
         return new TokenResponse(accessToken, newRefreshTokenPlain);
     }
 
-
     public async Task<bool> LogoutAsync(string refreshTokenPlain)
     {
         return await _refreshTokenService.RemoveRefreshToken(refreshTokenPlain);
