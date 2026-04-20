@@ -15,6 +15,11 @@ public class UserService
         _users = database.GetCollection<User>("users");
     }
 
+    public async Task<User?> GetUserByIdAsync(string id)
+    {
+        return await _users.Find(u => u.Id == id).FirstOrDefaultAsync();
+    }
+
     public async Task<bool> IsEmailTaken(string email)
     {
         var existingUser = await _users.Find(u => u.Email == email).FirstOrDefaultAsync();
@@ -47,11 +52,6 @@ public class UserService
         }
 
         return user;
-    }
-
-    public async Task<User?> GetUserByRefreshToken(string refreshToken)
-    {
-        return await _users.Find(u => u.RefreshToken == refreshToken && !u.IsDeleted).FirstOrDefaultAsync();
     }
 
     public async Task UpdateUser(User user)

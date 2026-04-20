@@ -1,18 +1,31 @@
-import React from 'react'
-import { cookies } from 'next/headers';
-import HeaderLoginLink from './login-link';
+"use client";
 
-async function HeaderUser() {
-  const cookieStore = await cookies();
-  const isAuthenticated = cookieStore.has('accessToken') && cookieStore.has('refreshToken');
+import React, { useContext } from 'react'
+import HeaderLoginLink from './login-link';
+import HeaderUserMenu from './user-menu';
+import { Badge } from '@/components/ui/badge';
+import { Spinner } from '@/components/ui/spinner';
+import { userContext } from '@/context/userContext';
+
+function HeaderUser() {
+  const { isLoading, userData } = useContext(userContext);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center">
+        <Badge className="bg-card text-foreground h-8">
+          <Spinner data-icon="inline-start" />
+          <span>Loading</span>
+        </Badge>
+      </div>
+    );
+  }
 
   return (
     <div className="flex gap-2 items-center cursor-pointer transition-colors hover:text-gray-400">
-        
-
-        { !isAuthenticated ?
+        { userData === null ?
           <HeaderLoginLink />
-          : <>Username</>
+          : <HeaderUserMenu userData={userData} />
         }
     </div>
   )

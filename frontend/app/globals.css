@@ -5,6 +5,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --color-light: #FDFFFF;
+  --color-dark: #201615;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
@@ -53,9 +55,9 @@
 :root {
   --background: #FDFFFF;
   --foreground: #201615;
-  --card: #D9C8B6;
+  --card: #F0EBE5;
   --card-foreground: #201615;
-  --popover: #D9C8B6;
+  --popover: #F0EBE5;
   --popover-foreground: #201615;
   --primary: #47A657;
   --primary-foreground: #FDFFFF;
@@ -77,7 +79,7 @@
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
   --radius: 0.625rem;
-  --sidebar: #D9C8B6;
+  --sidebar: #F0EBE5;
   --sidebar-foreground: #201615;
   --sidebar-primary: #47A657;
   --sidebar-primary-foreground: #FDFFFF;
