@@ -51,6 +51,8 @@ public static class AuthExtensions
                     var tokenResponse = await authService.RefreshTokenAsync(refreshTokenPlain);
                     if (tokenResponse == null)
                     {
+                        context.Response.Cookies.Delete("accessToken");
+                        context.Response.Cookies.Delete("refreshToken");
                         return;
                     }
 
