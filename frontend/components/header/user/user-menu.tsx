@@ -1,25 +1,36 @@
-import { MeResponseDTO } from '@/types/user/dto';
+"use client"
+
 import React from 'react'
+import { MeResponseDTO } from '@/types/user/dto';
 import HeaderUserMenuAvatar from './user-menu-avatar';
-import { serverFetch } from '@/lib/server/fetch';
+import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuList, NavigationMenuTrigger } from '@/components/ui/navigation-menu';
+import Link from 'next/link';
 
-async function HeaderUserMenu() {
-  const response = await serverFetch(`/user/me`, {
-    method: "GET",
-  });
+interface Props {
+  userData: MeResponseDTO;
+}
 
-  if (!response.ok) {
-    console.log(response.status, response.statusText);
-    return <span>error</span>
-  }
-
-  const userData: MeResponseDTO = await response.json();
-
+function HeaderUserMenu({ userData } : Props) {
   return (
-    <div className="flex gap-2 items-center cursor-pointer transition-colors hover:text-gray-400">
-      <HeaderUserMenuAvatar avatarUrl={userData.avatarUrl}  />
-      <span>{ userData.name ?? userData.email }</span>
-    </div>
+    <NavigationMenu>
+      <NavigationMenuList>
+        <NavigationMenuItem>
+          <NavigationMenuTrigger>
+            <div className="flex gap-2 items-center cursor-pointer transition-colors hover:text-gray-400">
+              <HeaderUserMenuAvatar avatarUrl={userData.avatarUrl} />
+              <span>{ userData.name ?? userData.email }</span>
+            </div>
+          </NavigationMenuTrigger>
+
+          <NavigationMenuContent>
+            <ul className="w-full">
+              <Link href="/profile">Profile</Link>
+            </ul>
+          </NavigationMenuContent>
+        </NavigationMenuItem>
+      </NavigationMenuList>
+    </NavigationMenu>
+    
   )
 }
 
