@@ -1,13 +1,13 @@
 "use client"
 
 import React from 'react'
-import { MeResponseDTO } from '@/types/user/dto';
 import HeaderUserMenuAvatar from './user-menu-avatar';
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuList, NavigationMenuTrigger } from '@/components/ui/navigation-menu';
 import Link from 'next/link';
+import { UserData } from '@/types/user/UserData';
 
 interface Props {
-  userData: MeResponseDTO;
+  userData: UserData;
 }
 
 function HeaderUserMenu({ userData } : Props) {
