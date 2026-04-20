@@ -22,6 +22,7 @@ function HeaderUserMenu({ userData } : Props) {
     const error = await logout();
     if (error === null) {
       toast.success("Logged out in successfully");
+      router.refresh();
     } else {
       toast.error("Failed to logout", {
         description: `Reason: ${error}`,
