@@ -7,11 +7,13 @@ export default function ProfileLayout({
   children: React.ReactNode;
 }) {
   return (
-    <section className="flex flex-1 gap-6 py-6">
-      <aside className="w-64 shrink-0">
-        <Sidebar />
-      </aside>
-      <main className="min-w-0 flex-1">{children}</main>
+    <section className="flex  bg-light py-8">
+      <div className="mx-auto flex w-full max-w-280 gap-8 px-4">
+        <aside className="shrink-0">
+          <Sidebar />
+        </aside>
+        <main className="min-w-0 flex-1 bg-light px-10 py-8">{children}</main>
+      </div>
     </section>
   );
 }

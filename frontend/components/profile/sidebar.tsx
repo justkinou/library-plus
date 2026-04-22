@@ -2,31 +2,45 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import path from "path";
+import { BellIcon, ShoppingBagIcon, UserIcon } from "@phosphor-icons/react";
+import { act } from "react";
 
-const links = [{ href: "/profile/account", label: "Account" }];
+const links = [
+  { href: "/profile/account", label: "Account", icon: UserIcon },
+  { href: "/profile/rentals", label: "My rentals", icon: ShoppingBagIcon },
+  { href: "/profile/notifications", label: "Notifications", icon: BellIcon },
+];
 
 export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex flex-col gap-2">
-      {links.map((link) => {
-        const active = pathname === link.href;
-        return (
-          <Link
-            key={link.href}
-            href={link.href}
-            className={
-              active
-                ? "font-semibold text-primary"
-                : "text-muted-foreground hover:text-foreground"
-            }
-          >
-            {link.label}
-          </Link>
-        );
-      })}
-    </nav>
+    <aside className="w-full max-w-60 bg-light border border-light-contrast">
+      <nav className="flex flex-col">
+        {links.map(({ href, label, icon: Icon }) => {
+          const active = pathname === href;
+          return (
+            <Link
+              key={href}
+              href={href}
+              aria-current={active ? "page" : undefined}
+              className={[
+                "flex h-12 items-center gap-3 border-b border-light-contrast px-4 text-[15px] transition-colors last:border-b-0",
+                active
+                  ? "font-semibold text-primary hover:text-dark underline"
+                  : "text-dark hover:text-primary",
+              ].join(" ")}
+            >
+              <Icon
+                size={20}
+                weight={active ? "fill" : "regular"}
+                className={active ? "text-primary" : "text-dark"}
+              />
+              <span className="underline-offset-2">{label}</span>
+            </Link>
+          );
+        })}
+      </nav>
+    </aside>
   );
 }
