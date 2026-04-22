@@ -1,6 +1,5 @@
 import React from 'react'
 import HeaderActions from './actions/actions'
-import HeaderLinks from './links'
 import Logo from './logo'
 import HeaderUser from './user/user'
 
@@ -10,8 +9,6 @@ function Header() {
       <Logo />
 
       <div className="flex items-center justify-center gap-12">
-        <HeaderLinks />
-
         <HeaderActions />
 
         <HeaderUser />

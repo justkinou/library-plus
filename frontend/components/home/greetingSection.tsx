@@ -1,6 +1,7 @@
 import React from 'react'
 import styles from './styles.module.css'
 import { Button } from '../ui/button'
+import Link from 'next/link'
 
 function HomeGreetingSection() {
   return (
@@ -12,7 +13,9 @@ function HomeGreetingSection() {
                 <p>Here you can browse our vast collection of books and rent the ones that are the best for you. Our catalog contains 10,000 written pieces, so everyone can find something for himself</p>
             </div>
 
-            <Button className="bg-primary text-light cursor-pointer hover:opacity-80 text-xl px-8 py-6">Browse catalog</Button>
+            <Button className="bg-primary text-light cursor-pointer hover:opacity-80 text-xl px-8 py-6">
+                <Link href="/catalog">Browse catalog</Link>
+            </Button>
         </div>
     </div>
   )
