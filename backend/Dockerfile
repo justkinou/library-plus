@@ -5,15 +5,13 @@ COPY ["LibraryPlus.csproj", "./"]
 RUN dotnet restore "LibraryPlus.csproj"
 
 COPY . .
-RUN dotenet publish "LibraryPlus.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "LibraryPlus.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
-FROM mcr.microsoft.com/dotnet/aspnet:10.0-chiseled AS final
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 WORKDIR /app
 COPY --from=build /app/publish .
 
 EXPOSE 8080
 ENV ASPNETCORE_URLS=http://+:8080
-
-USER $APP_UID
 
 ENTRYPOINT ["dotnet", "LibraryPlus.dll"]
