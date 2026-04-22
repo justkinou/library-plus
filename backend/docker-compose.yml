@@ -35,6 +35,8 @@ services:
       - "8080:8080"
     volumes:
       - .:/app
+      - dotnet-bin:/app/bin
+      - dotnet-obj:/app/obj
       - nuget-cache:/root/.nuget/packages
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -44,3 +46,5 @@ services:
 volumes:
   db:
   nuget-cache:
+  dotnet-bin:
+  dotnet-obj:
