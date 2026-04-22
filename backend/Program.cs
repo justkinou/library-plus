@@ -14,7 +14,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 var pack = new ConventionPack { new CamelCaseElementNameConvention() };
 ConventionRegistry.Register("camel case", pack, t => true);
-var connectionString = builder.Configuration.GetSection("MongoDbSettings:ConnectionString").Value;
+var connectionString =
+    builder.Configuration.GetConnectionString("MongoDb")
+    ?? builder.Configuration["MongoDbSettings:ConnectionString"];
+
+if (string.IsNullOrWhiteSpace(connectionString))
+{
+    throw new InvalidOperationException(
+        "MongoDB connection string is missing. Configure MongoDbSettings:ConnectionString or ConnectionStrings:MongoDb.");
+}
 
 builder.Services.AddSingleton<IMongoClient>(new MongoClient(connectionString));
 builder.Services.AddSingleton<UserService>();

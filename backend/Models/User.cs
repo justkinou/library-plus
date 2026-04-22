@@ -3,6 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace LibraryPlus.Models;
 
+[BsonIgnoreExtraElements]
 public class User
 {
     [BsonRepresentation(BsonType.ObjectId)]
