@@ -6,7 +6,7 @@ import HeaderUser from './user/user'
 
 function Header() {
   return (
-    <div className="w-full flex items-center justify-between py-2">
+    <div className="w-full flex items-center justify-between px-2 py-4 mb-2">
       <Logo />
 
       <div className="flex items-center justify-center gap-12">

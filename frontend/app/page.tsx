@@ -1,8 +1,13 @@
+import HomeGreetingSection from '@/components/home/greetingSection'
 import React from 'react'
 
 function page() {
   return (
-    <div>Content</div>
+    <div className="w-full min-h-full">
+      <HomeGreetingSection />
+
+      <div style={{ height: "1000px" }}></div>
+    </div>
   )
 }
 
