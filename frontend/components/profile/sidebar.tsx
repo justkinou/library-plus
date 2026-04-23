@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BellIcon, ShoppingBagIcon, UserIcon } from "@phosphor-icons/react";
-import { act } from "react";
 
 const links = [
   { href: "/profile/account", label: "Account", icon: UserIcon },
@@ -15,8 +14,8 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-full max-w-60 bg-light border border-light-contrast">
-      <nav className="flex flex-col">
+    <aside className="w-full max-w-60 bg-light">
+      <nav className="flex flex-col divide-y deivide-light-contrast">
         {links.map(({ href, label, icon: Icon }) => {
           const active = pathname === href;
           return (
@@ -25,7 +24,7 @@ export default function Sidebar() {
               href={href}
               aria-current={active ? "page" : undefined}
               className={[
-                "flex h-12 items-center gap-3 border-b border-light-contrast px-4 text-[15px] transition-colors last:border-b-0",
+                "flex h-12 items-center gap-3  text-[15px] transition-colors px-6",
                 active
                   ? "font-semibold text-primary hover:text-dark underline"
                   : "text-dark hover:text-primary",
