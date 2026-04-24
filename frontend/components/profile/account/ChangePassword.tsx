@@ -7,8 +7,8 @@ function ChangePassword() {
     <section>
       <h2 className="text-xl font-semibold mb-4">Change password</h2>
 
-      <form className="max-w-md">
-        <FieldGroup className="flex flex-col gap-4 w-2xs">
+      <form>
+        <FieldGroup className="flex flex-col gap-4">
           <Field>
             <FieldLabel htmlFor="currentPassword">Current password</FieldLabel>
             <Input

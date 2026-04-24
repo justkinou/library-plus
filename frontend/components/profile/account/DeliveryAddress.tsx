@@ -7,12 +7,10 @@ function DeliveryAddress() {
   let buildingNumber = "9A";
   let postCode = "93-590";
   return (
-    <div className="px-8">
-      <div>
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Preferred delivery address</h2>
-          <EditButton />
-        </div>
+    <div>
+      <div className="mb-3 flex items-center justify-between">
+        <h2 className="text-xl font-semibold">Preferred delivery address</h2>
+        <EditButton />
       </div>
       <div className="flex items-center gap-4">
         <div className="flex flex-col text-base">

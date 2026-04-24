@@ -6,13 +6,17 @@ import React from "react";
 
 function page() {
   return (
-    <div>
-      <div className="mt-4 flex justify-center gap-24">
+    <div className="grid grid-cols-2 gap-8">
+      <div className="p-6">
         <UserInfo />
+      </div>
+      <div className=" p-6">
         <DeliveryAddress />
       </div>
-      <div className="mt-4 flex justify-center gap-24">
+      <div className=" p-6">
         <ChangePassword />
+      </div>
+      <div className="p-6">
         <DangerZone />
       </div>
     </div>
