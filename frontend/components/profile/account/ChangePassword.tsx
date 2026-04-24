@@ -40,6 +40,10 @@ function ChangePassword() {
               autoComplete="new-password"
             />
           </Field>
+
+          <button className="bg-primary px-10 py-1 text-white font-semibold">
+            Submit
+          </button>
         </FieldGroup>
       </form>
     </section>
