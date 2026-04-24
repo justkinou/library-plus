@@ -1,9 +1,12 @@
-import React from 'react'
+import UserInfo from "@/components/profile/account/UserInfo";
+import React from "react";
 
 function page() {
   return (
-    <div>PROFILE</div>
-  )
+    <div>
+      <UserInfo />
+    </div>
+  );
 }
 
-export default page
+export default page;
