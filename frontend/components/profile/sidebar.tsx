@@ -14,8 +14,8 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-full max-w-60 bg-light">
-      <nav className="flex flex-col divide-y deivide-light-contrast">
+    <aside className="w-full max-w-60 bg-background">
+      <nav className="flex flex-col divide-y deivide-contrast">
         {links.map(({ href, label, icon: Icon }) => {
           const active = pathname === href;
           return (
@@ -24,17 +24,13 @@ export default function Sidebar() {
               href={href}
               aria-current={active ? "page" : undefined}
               className={[
-                "flex h-12 items-center gap-3  text-[15px] transition-colors px-6",
+                "flex h-12 items-center gap-3 text-[15px] transition-colors px-6",
                 active
-                  ? "font-semibold text-primary hover:text-dark underline"
-                  : "text-dark hover:text-primary",
+                  ? "font-semibold text-primary hover:text-sidebar-foreground underline"
+                  : "text-sidebar-foreground hover:text-primary",
               ].join(" ")}
             >
-              <Icon
-                size={20}
-                weight={active ? "fill" : "regular"}
-                className={active ? "text-primary" : "text-dark"}
-              />
+              <Icon size={20} weight={active ? "fill" : "regular"} />
               <span className="underline-offset-2">{label}</span>
             </Link>
           );
