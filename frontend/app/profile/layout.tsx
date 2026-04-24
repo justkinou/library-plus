@@ -8,7 +8,7 @@ export default function ProfileLayout({
 }) {
   return (
     <section className="flex  bg-light-background py-8">
-      <div className="mx-auto flex w-full max-w-280 gap-8 px-4">
+      <div className="flex w-full gap-6 px-6">
         <aside className="shrink-0">
           <Sidebar />
         </aside>

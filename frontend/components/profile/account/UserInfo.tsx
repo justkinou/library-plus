@@ -10,7 +10,7 @@ function UserInfo() {
   let phoneNumber = "+375 25 742 06 84";
   let joinDate = "14 June 2026";
   return (
-    <div>
+    <div className="px-8">
       <div>
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-xl font-semibold">Account Info</h2>

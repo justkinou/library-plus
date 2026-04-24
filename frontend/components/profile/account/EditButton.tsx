@@ -1,3 +1,5 @@
+"use client";
+
 import { PencilSimpleIcon } from "@phosphor-icons/react";
 import React from "react";
 
