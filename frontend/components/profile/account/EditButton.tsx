@@ -7,7 +7,7 @@ function EditButton() {
   return (
     <button
       type="button"
-      className="inline-flex items-center gap-2 border border-dark px-1.5 py-0.5 cursor-pointer"
+      className="inline-flex items-center gap-2 border border-contrast px-1.5 py-0.5 cursor-pointer"
     >
       <PencilSimpleIcon size={18} />
       <span>Edit</span>
