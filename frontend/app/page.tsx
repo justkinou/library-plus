@@ -1,4 +1,4 @@
-import HomeGreetingSection from '@/components/home/greetingSection'
+import HomeGreetingSection from '@/components/home/GreetingSection'
 import HomeTrendingSection from '@/components/home/TrendingSection'
 import React from 'react'
 
