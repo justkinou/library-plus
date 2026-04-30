@@ -13,7 +13,7 @@ function layout({ children }: { children: React.ReactNode }) {
       className={`${rubik.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-        <body className="min-h-full flex flex-col px-6">
+        <body className="min-h-full flex flex-col px-6 pb-10">
           <Providers>
             <Header />
 
