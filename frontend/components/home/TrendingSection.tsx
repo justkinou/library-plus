@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Carousel, CarouselApi, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../ui/carousel'
 import { Button } from '../ui/button'
 import Link from 'next/link'
+import { useWindowSize } from '@/hooks/useWindowSize'
 
 const books = [
   {
@@ -69,32 +70,47 @@ const books = [
     availability: "Limited availability",
     imageURL: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fanyiko.files.wordpress.com%2F2013%2F01%2Fto-kill-a-mockingbird.jpg&f=1&nofb=1&ipt=650ce9a246c87694b743a0e69ef1947bbfc81ddd82bc56387e3f2848f7ac3b67"
   },
+    {
+    title: "The Great Gatsby",
+    author: "F. Scott Fitzgerald",
+    language: "English",
+    published: 1925,
+    availability: "Available now",
+    imageURL: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fd28hgpri8am2if.cloudfront.net%2Fbook_images%2Fonix%2Fcvr9780743273565%2Fthe-great-gatsby-9780743273565_hr.jpg&f=1&nofb=1&ipt=c352c53f1483ecce0698d5bf02ad053ae4ae0487b968bcf015fc1eaa9adae7be"
+  },
 ];
 
 function TrendingSection() {
   const [api, setApi] = useState<CarouselApi>();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [booksPerSlide, setBooksPerSlide] = useState(3);
-
-  useEffect(() => {
-    if (window.innerHeight >= 768) {
-      setBooksPerSlide(3);
-    } else {
-      setBooksPerSlide(1);
-    }
-  }, [window.innerWidth])
+  const { width } = useWindowSize();
 
   useEffect(() => {
     if (!api) {
       return
     }
 
-    setCurrentSlide(api.selectedScrollSnap() + 1)
+    setCurrentSlide(api.selectedScrollSnap())
 
     api.on("select", () => {
-      setCurrentSlide(api.selectedScrollSnap() + 1)
+      setCurrentSlide(api.selectedScrollSnap())
     })
   }, [api]);
+
+  useEffect(() => {
+    if ((width ?? 0) >= 768) {
+      if (booksPerSlide === 1) {
+        api?.scrollTo(0);
+      }
+      setBooksPerSlide(3);
+    } else {
+      if (booksPerSlide === 3) {
+        api?.scrollTo(0);
+      }
+      setBooksPerSlide(1);
+    }
+  }, [width])
 
   return (
     <div className="w-full flex flex-col items-center gap-4">
@@ -140,7 +156,7 @@ function TrendingSection() {
         <div className="flex justify-center items-center gap-2">
           {Array.from({ length: Math.ceil(books.length / booksPerSlide) }).map((_, index) => (
             <div key={index} className="w-5 h-5 rounded-full bg-background flex justify-center items-center">
-              { currentSlide === (index + 1) ? <div className="w-3 h-3 rounded-full bg-primary" /> : <></> }
+              { currentSlide === index ? <div className="w-3 h-3 rounded-full bg-primary" /> : <></> }
             </div>
           ))}
         </div>
