@@ -5,7 +5,7 @@ import React from 'react'
 
 function Footer() {
   return (
-    <div className="w-full flex justify-center">
+    <div className="w-full flex justify-center text-sm">
         <div className="w-full md:w-4/5 flex flex-col md:flex-row md:justify-between gap-4">
             <div>
                 <p className="text-xl font-bold">Library+</p>

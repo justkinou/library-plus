@@ -3,7 +3,7 @@ import './globals.css';
 import Header from "@/components/header/header";
 import { CustomToaster } from "@/components/Toaster/CustomToaster";
 import { Providers } from "@/components/providers";
-import Footer from "@/components/footer/Footer";
+import Footer from "@/components/Footer";
 
 const rubik = Rubik({subsets:['latin'], variable:'--font-mono'});
 
