@@ -114,10 +114,10 @@ function TrendingSection() {
 
   return (
     <div className="w-full flex flex-col items-center gap-4">
-        <span className="text-xl md:text-3xl font-bold">Trending books</span>
+        <span className="text-xl font-bold">Trending books</span>
 
         <Carousel
-          className="w-8/10"
+          className="w-full lg:w-8/10"
           setApi={setApi}
           opts={{
             align: "start",
@@ -126,9 +126,9 @@ function TrendingSection() {
             containScroll: false,
           }}
         >
-          <CarouselContent>
+          <CarouselContent className="-ml-8">
             {books.map((book, index) => (
-              <CarouselItem key={index} className="md:basis-1/3">
+              <CarouselItem key={index} className="md:basis-1/3 pl-8">
                 <div className="w-full bg-background p-6 flex flex-col items-center gap-4">
                   <img className="max-h-[400px]" src={book.imageURL} alt={book.title + ' image'} />
 
@@ -140,7 +140,7 @@ function TrendingSection() {
                     <p>{book.availability}</p>
                   </div>
 
-                  <Button className="w-full bg-primary text-light cursor-pointer hover:opacity-80 text-xl py-3">
+                  <Button className="w-full bg-primary text-light cursor-pointer hover:opacity-80 text-base py-3">
                     <Link href={`/book/someid`}>Learn more</Link>
                   </Button>
                 </div>

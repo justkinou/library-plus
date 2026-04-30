@@ -17,11 +17,11 @@ function QuestionCard({ question, children: answer }: Props) {
             <Collapsible className="rounded-md data-[state=open]:bg-muted">
                 <CollapsibleTrigger asChild>
                     <Button variant="ghost" className="group w-full md:flex justify-between cursor-pointer">
-                        <div className="text-xl font-bold">{question}</div>
+                        <div className="text-lg font-bold">{question}</div>
                         <CaretDownIcon className="hidden md:block group-data-[state=open]:rotate-180" />
                     </Button>
                 </CollapsibleTrigger>
-                <CollapsibleContent className="flex flex-col items-start gap-2 p-4 text-base">
+                <CollapsibleContent className="flex flex-col items-start gap-2 p-4 text-sm">
                     {answer}
                 </CollapsibleContent>
             </Collapsible>

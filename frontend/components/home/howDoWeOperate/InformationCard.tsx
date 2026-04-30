@@ -9,15 +9,15 @@ interface Props {
 
 function InformationCard({ sequentialNumber, title, text, icon }: Props) {
   return (
-    <div className="w-72 h-72 p-6 bg-background flex flex-col gap-10">
+    <div className="w-72 min-h-64 p-6 bg-background flex flex-col gap-6">
       <div className="flex w-full justify-between items-end">
-      <span className="text-7xl font-bold text-primary">{sequentialNumber}</span>
+      <span className="text-6xl font-bold text-primary">{sequentialNumber}</span>
 
       {icon}
       </div>
 
       <div>
-        <p className="text-xl font-bold">{title}</p>
+        <p className="text-lg font-bold">{title}</p>
         <p>{text}</p>
       </div>
     </div>

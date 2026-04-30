@@ -4,7 +4,7 @@ import QuestionCard from './QuestionCard'
 function FAQSection() {
   return (
     <div className="w-full flex flex-col items-center gap-4">
-        <span className="text-xl md:text-3xl font-bold">FAQ</span>
+        <span className="text-xl font-bold">FAQ</span>
 
         <div className="flex flex-col px-4 w-full gap-2">
             <QuestionCard question="What if I won’t return the rented book on time?">
