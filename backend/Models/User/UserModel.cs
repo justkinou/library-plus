@@ -10,9 +10,9 @@ public class UserModel
     public string Id { get; set; } = null!;
     public string Email { get; set; } = null!;
     public string PasswordHash { get; set; } = null!;
-    public string PhoneNumber { get; set; } = null!;
-    public string Name { get; set; } = null!;
-    public string AvatarUrl { get; set; } = null!;
+    public string? PhoneNumber { get; set; }
+    public string? Name { get; set; }
+    public string? AvatarUrl { get; set; }
     public AddressModel DeliveryAddress { get; set; } = null!; 
     public DateTime JoinedAt { get; set; }
     public bool IsDeleted { get; set; }

@@ -18,8 +18,15 @@ public static class UserEndpoints
         group.MapGet("/meShort", [Authorize] async (ClaimsPrincipal claims, UserService userService) =>
         {
             var userId = claims.FindFirstValue("sub")!;
-            var user = await userService.GetUserByIdAsync(userId);
-            return new MeResponseShortDto(user!.Email, user.Name, user.AvatarUrl);
+            var user = (await userService.GetUserByIdAsync(userId))!;
+            return new MeResponseShortDto(user.Email, user.Name, user.AvatarUrl);
+        });
+
+        group.MapGet("/me", [Authorize] async (ClaimsPrincipal claims, UserService userService) =>
+        {
+            var userId = claims.FindFirstValue("sub")!;
+            var user = (await userService.GetUserByIdAsync(userId))!;
+            return MeResponseDto.FromModel(user);
         });
 
         group.MapPut("/updateAddress", [Authorize] async (

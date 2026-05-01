@@ -13,6 +13,4 @@ public class AddressModel
     public string? Street { get; set; } = null;
     public string? PostalCode { get; set; } = null;
     public string? BuildingNumber { get; set; } = null;
-
-    public string UserId { get; set; } = null!;
 }

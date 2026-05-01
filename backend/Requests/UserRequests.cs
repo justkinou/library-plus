@@ -3,9 +3,9 @@ namespace LibraryPlus.Requests;
 public record SignupRequest(
     string Email,
     string Password,
-    string Name,
-    string PhoneNumber,
-    string AvatarUrl
+    string? Name,
+    string? PhoneNumber,
+    string? AvatarUrl
 );
 
 public record LoginRequest(
