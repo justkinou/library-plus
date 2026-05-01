@@ -10,7 +10,7 @@ public class UserService(IMongoDatabase db)
 
     public async Task<UserModel?> GetUserByIdAsync(string id)
     {
-        return await _users.Find(u => u.Id == id).FirstOrDefaultAsync();
+        return await (await _users.FindAsync(u => u.Id == id)).FirstOrDefaultAsync();
     }
 
     public async Task<bool> IsEmailTaken(string email)
@@ -50,16 +50,18 @@ public class UserService(IMongoDatabase db)
 
     public async Task UpdateAddress(string userId, UpdateAddressRequest updateAddressRequest)
     {
-        var user = (await GetUserByIdAsync(userId))!;
-        
-        user.DeliveryAddress.Country = updateAddressRequest.Country;
-        user.DeliveryAddress.State = updateAddressRequest.State;
-        user.DeliveryAddress.City = updateAddressRequest.City;
-        user.DeliveryAddress.Street = updateAddressRequest.Street;
-        user.DeliveryAddress.PostalCode = updateAddressRequest.PostalCode;
-        user.DeliveryAddress.BuildingNumber = updateAddressRequest.BuildingNumber;
+        await _users.UpdateOneAsync(
+            Builders<UserModel>.Filter.Eq(u => u.Id, userId),
+            Builders<UserModel>.Update.Set(u => u.DeliveryAddress, updateAddressRequest.ToModel())
+        );
+    }
 
-        await _users.ReplaceOneAsync(u => u.Id == user.Id, user);
+    public async Task UpdatePhoneNumber(string userId, string newPhoneNumber)
+    {
+        await _users.UpdateOneAsync(
+            Builders<UserModel>.Filter.Eq(u => u.Id, userId),
+            Builders<UserModel>.Update.Set(u => u.PhoneNumber, newPhoneNumber)
+        );
     }
 
 }

@@ -29,13 +29,22 @@ public static class UserEndpoints
             return MeResponseDto.FromModel(user);
         });
 
-        group.MapPut("/updateAddress", [Authorize] async (
+        group.MapPatch("/updateAddress", [Authorize] async (
             ClaimsPrincipal claims,
             UserService userService,
             [FromBody] UpdateAddressRequest updateAddressRequest
         ) => {
             var userId = claims.FindFirstValue("sub")!;
             await userService.UpdateAddress(userId, updateAddressRequest);
+        });
+
+        group.MapPatch("/updatePhoneNumber", [Authorize] async (
+            ClaimsPrincipal claims,
+            UserService userService,
+            [FromBody] UpdatePhoneNumberRequestDto updatePhoneNumberDto) =>
+        {
+            var userId = claims.FindFirstValue("sub")!;
+            await userService.UpdatePhoneNumber(userId, updatePhoneNumberDto.NewPhoneNumber);
         });
     }
 }
