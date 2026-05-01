@@ -25,9 +25,9 @@ services:
       ME_CONFIG_BASICAUTH_USERNAME: mongoexpressuser
       ME_CONFIG_BASICAUTH_PASSWORD: mongoexpresspass
 
-  dotnet-app:
+  # dev build
+  dotnet-app-dev:
     build:
-      context: .
       dockerfile: Dockerfile.dev
     depends_on:
       mongo:
@@ -39,13 +39,19 @@ services:
       - dotnet-bin:/app/bin
       - dotnet-obj:/app/obj
       - nuget-cache:/root/.nuget/packages
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__MongoDb=mongodb://root:some_secret_password@mongo:27017/
-      - DOTNET_USE_POLLING_FILE_WATCHER=1
+
+  # release build
+  # dotnet-app:
+  #   build: .
+  #   depends_on:
+  #     mongo:
+  #       condition: service_healthy
+  #   ports:
+  #     - "8080:8080"
 
 volumes:
   db:
+  # Only use the volumes below if you use the dotnet-app-dev
   nuget-cache:
   dotnet-bin:
   dotnet-obj:

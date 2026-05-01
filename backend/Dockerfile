@@ -1,17 +1,17 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
-COPY ["LibraryPlus.csproj", "./"]
-RUN dotnet restore "LibraryPlus.csproj"
+COPY LibraryPlus.csproj .
+RUN dotnet restore
 
 COPY . .
-RUN dotnet publish "LibraryPlus.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet build -c Release --no-restore
+RUN dotnet publish -c Release -o /app --no-restore
 
-FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
-COPY --from=build /app/publish .
+COPY --from=build /app .
 
 EXPOSE 8080
-ENV ASPNETCORE_URLS=http://+:8080
 
-ENTRYPOINT ["dotnet", "LibraryPlus.dll"]
+CMD ["dotnet", "LibraryPlus.dll"]
