@@ -1,7 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using LibraryPlus.Models;
+using LibraryPlus.Models.User;
 using Microsoft.IdentityModel.Tokens;
 
 namespace LibraryPlus.Services.Auth;

@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 using System.Text;
-using LibraryPlus.Models;
+using LibraryPlus.Models.User;
 using MongoDB.Driver;
 
 namespace LibraryPlus.Services.Auth;

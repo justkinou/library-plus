@@ -13,7 +13,7 @@ public class User
     public string PhoneNumber { get; set; } = null!;
     public string Name { get; set; } = null!;
     public string AvatarUrl { get; set; } = null!;
-    public long DeliveryAddressId { get; set; }
+    public Address DeliveryAddress { get; set; } = null!; 
     public DateTime JoinedAt { get; set; }
     public bool IsDeleted { get; set; }
 }

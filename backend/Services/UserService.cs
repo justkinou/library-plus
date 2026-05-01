@@ -1,5 +1,5 @@
 using MongoDB.Driver;
-using LibraryPlus.Models;
+using LibraryPlus.Models.User;
 using LibraryPlus.UserRequests;
 
 namespace LibraryPlus.Services;
@@ -35,8 +35,9 @@ public class UserService
             PhoneNumber = request.PhoneNumber,
             AvatarUrl = request.AvatarUrl,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
+            DeliveryAddress = new(),
             JoinedAt = DateTime.UtcNow,
-            IsDeleted = false
+            IsDeleted = false,
         };
 
         await _users.InsertOneAsync(newUser);
@@ -54,8 +55,4 @@ public class UserService
         return user;
     }
 
-    public async Task UpdateUser(User user)
-    {
-        await _users.ReplaceOneAsync(u => u.Id == user.Id, user);
-    }
 }
