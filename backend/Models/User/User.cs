@@ -1,7 +1,7 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace LibraryPlus.Models;
+namespace LibraryPlus.Models.User;
 
 [BsonIgnoreExtraElements]
 public class User
