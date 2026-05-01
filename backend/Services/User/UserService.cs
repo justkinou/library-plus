@@ -1,6 +1,7 @@
 using MongoDB.Driver;
 using LibraryPlus.Models.User;
 using LibraryPlus.Requests;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace LibraryPlus.Services.User;
 
@@ -62,6 +63,22 @@ public class UserService(IMongoDatabase db)
             Builders<UserModel>.Filter.Eq(u => u.Id, userId),
             Builders<UserModel>.Update.Set(u => u.PhoneNumber, newPhoneNumber)
         );
+    }
+
+    public async Task<bool> UpdatePassword(string userId, string oldPassword, string newPassword)
+    {
+        var user = await (await _users.FindAsync(u => u.Id == userId)).FirstAsync();
+    
+        if (!BCrypt.Net.BCrypt.Verify(oldPassword, user.PasswordHash))
+        {
+            return false;
+        }
+
+        await _users.UpdateOneAsync(
+            Builders<UserModel>.Filter.Eq(u => u.Id, userId),
+            Builders<UserModel>.Update.Set(u => u.PasswordHash, BCrypt.Net.BCrypt.HashPassword(newPassword))
+        );
+        return true;
     }
 
 }

@@ -46,5 +46,20 @@ public static class UserEndpoints
             var userId = claims.FindFirstValue("sub")!;
             await userService.UpdatePhoneNumber(userId, updatePhoneNumberDto.NewPhoneNumber);
         });
+
+        group.MapPatch("/updatePassword", [Authorize] async (
+            ClaimsPrincipal claims,
+            UserService userService,
+            [FromBody] UpdatePasswordRequestDto updatePasswordDto
+        ) =>
+        {
+            var userId = claims.FindFirstValue("sub")!;
+            var res = await userService.UpdatePassword(userId, updatePasswordDto.OldPassword, updatePasswordDto.NewPassword);
+            if (!res)
+            {
+                return Results.BadRequest();
+            }
+            return Results.Ok();
+        });
     }
 }
