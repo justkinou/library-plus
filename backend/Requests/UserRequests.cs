@@ -5,11 +5,13 @@ public record SignupRequest(
     string Password,
     string Name,
     string PhoneNumber,
-    string AvatarUrl);
+    string AvatarUrl
+);
 
 public record LoginRequest(
-string Email,
-string Password);
+    string Email,
+    string Password
+);
 
 public record RefreshRequest(string RefreshToken);
 

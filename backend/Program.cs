@@ -24,7 +24,10 @@ if (string.IsNullOrWhiteSpace(connectionString))
         "MongoDB connection string is missing. Configure MongoDbSettings:ConnectionString or ConnectionStrings:MongoDb.");
 }
 
-builder.Services.AddSingleton<IMongoClient>(new MongoClient(connectionString));
+var mongoClient = new MongoClient(connectionString);
+var db = mongoClient.GetDatabase(builder.Configuration["MongoDbSettings:DatabaseName"]);
+
+builder.Services.AddSingleton<IMongoDatabase>(db);
 builder.Services.AddSingleton<UserService>();
 builder.Services.AddSingleton<JwtService>();
 builder.Services.AddSingleton<RefreshTokenService>();

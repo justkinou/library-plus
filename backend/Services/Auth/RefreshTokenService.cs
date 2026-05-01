@@ -11,13 +11,11 @@ public class RefreshTokenService
     private readonly IMongoCollection<RefreshTokenModel> _refreshTokens;
     private readonly UserService _userService;
 
-    public RefreshTokenService(IMongoClient mongoClient, IConfiguration config, UserService userService)
+    public RefreshTokenService(IMongoDatabase db, UserService userService)
     {
-        var databaseName = config["MongoDbSettings:DatabaseName"];
-        var database = mongoClient.GetDatabase(databaseName);
+        _refreshTokens = db.GetCollection<RefreshTokenModel>("refreshTokens");
         _userService = userService;
-        _refreshTokens = database.GetCollection<RefreshTokenModel>("refreshTokens");
-
+        
         var indexKeys = Builders<RefreshTokenModel>.IndexKeys.Ascending(t => t.ExpiryDate);
         var indexOptions = new CreateIndexOptions { ExpireAfter = TimeSpan.Zero };
         _refreshTokens.Indexes.CreateOne(new CreateIndexModel<RefreshTokenModel>(indexKeys, indexOptions));

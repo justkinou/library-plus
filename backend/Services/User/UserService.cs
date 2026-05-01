@@ -1,21 +1,14 @@
 using MongoDB.Driver;
-using UserModels = LibraryPlus.Models.User;
+using LibraryPlus.Models.User;
 using LibraryPlus.Requests;
 
 namespace LibraryPlus.Services.User;
 
-public class UserService
+public class UserService(IMongoDatabase db)
 {
-    private readonly IMongoCollection<UserModels.UserModel> _users;
+    private readonly IMongoCollection<UserModel> _users = db.GetCollection<UserModel>("users");
 
-    public UserService(IMongoClient mongoClient, IConfiguration config)
-    {
-        var databaseName = config["MongoDbSettings:DatabaseName"];
-        var database = mongoClient.GetDatabase(databaseName);
-        _users = database.GetCollection<UserModels.UserModel>("users");
-    }
-
-    public async Task<UserModels.UserModel?> GetUserByIdAsync(string id)
+    public async Task<UserModel?> GetUserByIdAsync(string id)
     {
         return await _users.Find(u => u.Id == id).FirstOrDefaultAsync();
     }
@@ -28,7 +21,7 @@ public class UserService
 
     public async Task CreateUser(SignupRequest request)
     {
-        var newUser = new UserModels.UserModel
+        var newUser = new UserModel
         {
             Email = request.Email,
             Name = request.Name,
@@ -43,7 +36,7 @@ public class UserService
         await _users.InsertOneAsync(newUser);
     }
 
-    public async Task<UserModels.UserModel?> VerifyUserLogin(string email, string password)
+    public async Task<UserModel?> VerifyUserLogin(string email, string password)
     {
         var user = await _users.Find(u => u.Email == email && !u.IsDeleted).FirstOrDefaultAsync();
 
@@ -53,6 +46,20 @@ public class UserService
         }
 
         return user;
+    }
+
+    public async Task UpdateAddress(string userId, UpdateAddressRequest updateAddressRequest)
+    {
+        var user = (await GetUserByIdAsync(userId))!;
+        
+        user.DeliveryAddress.Country = updateAddressRequest.Country;
+        user.DeliveryAddress.State = updateAddressRequest.State;
+        user.DeliveryAddress.City = updateAddressRequest.City;
+        user.DeliveryAddress.Street = updateAddressRequest.Street;
+        user.DeliveryAddress.PostalCode = updateAddressRequest.PostalCode;
+        user.DeliveryAddress.BuildingNumber = updateAddressRequest.BuildingNumber;
+
+        await _users.ReplaceOneAsync(u => u.Id == user.Id, user);
     }
 
 }
