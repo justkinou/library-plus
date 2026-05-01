@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using LibraryPlus.Endpoints.User.Dto;
 using LibraryPlus.Filters;
-using LibraryPlus.Services;
+using LibraryPlus.Services.User;
 using Microsoft.AspNetCore.Authorization;
 
 namespace LibraryPlus.Endpoints.User;

@@ -1,7 +1,7 @@
 using LibraryPlus.Endpoints;
 using LibraryPlus.Endpoints.User;
 using LibraryPlus.Extensions;
-using LibraryPlus.Services;
+using LibraryPlus.Services.User;
 using LibraryPlus.Services.Auth;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;

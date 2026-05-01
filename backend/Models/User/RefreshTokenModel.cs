@@ -3,7 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 namespace LibraryPlus.Models.User;
 
 [BsonIgnoreExtraElements]
-public class RefreshToken
+public class RefreshTokenModel
 {
     public string RefreshTokenHash { get; set; } = null!;
     public string UserId { get; set; } = null!;

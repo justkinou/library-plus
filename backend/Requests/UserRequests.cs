@@ -1,4 +1,4 @@
-namespace LibraryPlus.UserRequests;
+namespace LibraryPlus.Requests;
 
 public record SignupRequest(
     string Email,

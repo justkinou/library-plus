@@ -10,7 +10,7 @@ public class JwtService(IConfiguration config)
 {
     private readonly IConfiguration _config = config;
 
-    public string GenerateJwtToken(User user)
+    public string GenerateJwtToken(UserModel user)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.UTF8.GetBytes(_config["Jwt:Key"]!);

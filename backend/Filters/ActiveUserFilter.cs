@@ -1,6 +1,5 @@
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using LibraryPlus.Services;
+using LibraryPlus.Services.User;
 
 namespace LibraryPlus.Filters;
 

@@ -4,7 +4,7 @@ using MongoDB.Bson.Serialization.Attributes;
 namespace LibraryPlus.Models.User;
 
 [BsonIgnoreExtraElements]
-public class Address
+public class AddressModel
 {
     [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; } = null!;

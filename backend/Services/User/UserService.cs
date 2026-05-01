@@ -1,21 +1,21 @@
 using MongoDB.Driver;
-using LibraryPlus.Models.User;
-using LibraryPlus.UserRequests;
+using UserModels = LibraryPlus.Models.User;
+using LibraryPlus.Requests;
 
-namespace LibraryPlus.Services;
+namespace LibraryPlus.Services.User;
 
 public class UserService
 {
-    private readonly IMongoCollection<User> _users;
+    private readonly IMongoCollection<UserModels.UserModel> _users;
 
     public UserService(IMongoClient mongoClient, IConfiguration config)
     {
         var databaseName = config["MongoDbSettings:DatabaseName"];
         var database = mongoClient.GetDatabase(databaseName);
-        _users = database.GetCollection<User>("users");
+        _users = database.GetCollection<UserModels.UserModel>("users");
     }
 
-    public async Task<User?> GetUserByIdAsync(string id)
+    public async Task<UserModels.UserModel?> GetUserByIdAsync(string id)
     {
         return await _users.Find(u => u.Id == id).FirstOrDefaultAsync();
     }
@@ -28,7 +28,7 @@ public class UserService
 
     public async Task CreateUser(SignupRequest request)
     {
-        var newUser = new User
+        var newUser = new UserModels.UserModel
         {
             Email = request.Email,
             Name = request.Name,
@@ -43,7 +43,7 @@ public class UserService
         await _users.InsertOneAsync(newUser);
     }
 
-    public async Task<User?> VerifyUserLogin(string email, string password)
+    public async Task<UserModels.UserModel?> VerifyUserLogin(string email, string password)
     {
         var user = await _users.Find(u => u.Email == email && !u.IsDeleted).FirstOrDefaultAsync();
 
