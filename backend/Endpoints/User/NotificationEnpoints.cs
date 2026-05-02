@@ -1,4 +1,4 @@
-using LibraryPlus.Endpoints.User.Dto;
+using LibraryPlus.Requests;
 using LibraryPlus.Filters;
 using LibraryPlus.Services.User;
 using Microsoft.AspNetCore.Authorization;
@@ -17,7 +17,7 @@ public static class NotificationEndpoints
 
         group.MapPost("/sendOne", [Authorize] async (
             NotificationService notificationService,
-            [FromBody] SendOneNotificationRequestDto sendOneNotificationRequest
+            [FromBody] SendOneNotificationRequest sendOneNotificationRequest
         ) =>
         {
             await notificationService.SendOneUserNotification(sendOneNotificationRequest.UserId, sendOneNotificationRequest.Text);
@@ -25,7 +25,7 @@ public static class NotificationEndpoints
 
         group.MapPost("/sendAll", [Authorize] async (
             UserService userService,
-            [FromBody] SendAllNotificationRequestDto sendOneNotificationRequest
+            [FromBody] SendAllNotificationRequest sendOneNotificationRequest
         ) =>
         {
             await userService.SendAllUsersNotification(sendOneNotificationRequest.Text);

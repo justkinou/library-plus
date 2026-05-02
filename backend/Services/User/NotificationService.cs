@@ -1,5 +1,7 @@
+using LibraryPlus.DTO;
 using LibraryPlus.Models.User;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace LibraryPlus.Services.User;
 
@@ -25,6 +27,7 @@ public class NotificationService(IMongoDatabase db)
         {
             UserId = userId,
             NotificationId = notification.Id,
+            CreatedAt = DateTime.UtcNow,
         });
     }
 
@@ -35,8 +38,51 @@ public class NotificationService(IMongoDatabase db)
         {
             UserId = id,
             NotificationId = notification.Id,
+            CreatedAt = DateTime.UtcNow,
         });
         await _userNotifications.InsertManyAsync(userNotifications);
+    }
+
+    public async Task<IList<UserNotificationDTO>> GetUserNotifications(string userId, int page)
+    {
+        Console.WriteLine($"userId = {userId}");
+        var a = _userNotifications.AsQueryable()
+            .Where(n => n.UserId == userId);
+        Console.WriteLine($"len(a) = {a.Count()}");
+        var b = a.OrderByDescending(n => n.CreatedAt);
+        Console.WriteLine($"len(b) = {b.Count()}");
+        var c = b.Skip(4 * (page - 1));
+        Console.WriteLine($"len(c) = {c.Count()}");
+        var d = c.Take(4);
+        Console.WriteLine($"len(d) = {d.Count()}");
+        foreach (var n in d.ToList())
+        {
+            Console.WriteLine($"{n.Id} {n.UserId} {n.NotificationId}");
+        }
+        foreach (var n in _notifications.AsQueryable().ToList())
+        {
+            Console.WriteLine($"notification: {n.Id}");
+        }
+        var e = d.Join(
+                _notifications.AsQueryable(),
+                un => un.NotificationId,
+                n => n.Id,
+                (un, n) => new UserNotificationDTO(un.Id, n.Text, un.IsRead)
+            );
+        Console.WriteLine($"len(e) = {e.Count()}");
+        
+        return await _userNotifications.AsQueryable()
+            .Where(n => n.UserId == userId)
+            .OrderByDescending(n => n.CreatedAt)
+            .Skip(4 * (page - 1))
+            .Take(4)
+            .Join(
+                _notifications.AsQueryable(),
+                un => un.NotificationId,
+                n => n.Id,
+                (un, n) => new UserNotificationDTO(un.Id, n.Text, un.IsRead)
+            )
+            .ToListAsync();
     }
     
 }

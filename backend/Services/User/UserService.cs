@@ -1,7 +1,6 @@
 using MongoDB.Driver;
 using LibraryPlus.Models.User;
 using LibraryPlus.Requests;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace LibraryPlus.Services.User;
 
