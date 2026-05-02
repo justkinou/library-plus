@@ -1,5 +1,6 @@
 using LibraryPlus.DTO;
 using LibraryPlus.Models.User;
+using Microsoft.Extensions.Configuration.UserSecrets;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
@@ -45,32 +46,6 @@ public class NotificationService(IMongoDatabase db)
 
     public async Task<IList<UserNotificationDTO>> GetUserNotifications(string userId, int page)
     {
-        Console.WriteLine($"userId = {userId}");
-        var a = _userNotifications.AsQueryable()
-            .Where(n => n.UserId == userId);
-        Console.WriteLine($"len(a) = {a.Count()}");
-        var b = a.OrderByDescending(n => n.CreatedAt);
-        Console.WriteLine($"len(b) = {b.Count()}");
-        var c = b.Skip(4 * (page - 1));
-        Console.WriteLine($"len(c) = {c.Count()}");
-        var d = c.Take(4);
-        Console.WriteLine($"len(d) = {d.Count()}");
-        foreach (var n in d.ToList())
-        {
-            Console.WriteLine($"{n.Id} {n.UserId} {n.NotificationId}");
-        }
-        foreach (var n in _notifications.AsQueryable().ToList())
-        {
-            Console.WriteLine($"notification: {n.Id}");
-        }
-        var e = d.Join(
-                _notifications.AsQueryable(),
-                un => un.NotificationId,
-                n => n.Id,
-                (un, n) => new UserNotificationDTO(un.Id, n.Text, un.IsRead)
-            );
-        Console.WriteLine($"len(e) = {e.Count()}");
-        
         return await _userNotifications.AsQueryable()
             .Where(n => n.UserId == userId)
             .OrderByDescending(n => n.CreatedAt)
@@ -83,6 +58,18 @@ public class NotificationService(IMongoDatabase db)
                 (un, n) => new UserNotificationDTO(un.Id, n.Text, un.IsRead)
             )
             .ToListAsync();
+    }
+
+    public async Task<bool> MarkNotificationAsRead(string userId, string id)
+    {
+        var res = await _userNotifications.UpdateOneAsync(
+            Builders<UserNotificationModel>.Filter.And(
+                Builders<UserNotificationModel>.Filter.Eq(un => un.Id, id),
+                Builders<UserNotificationModel>.Filter.Eq(un => un.UserId, userId)
+            ),
+            Builders<UserNotificationModel>.Update.Set(un => un.IsRead, true)
+        );
+        return res.MatchedCount == 1;
     }
     
 }
