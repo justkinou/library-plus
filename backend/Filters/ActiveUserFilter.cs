@@ -16,7 +16,7 @@ public class ActiveUserFilter(UserService userService) : IEndpointFilter
             return Results.Unauthorized();
         }
 
-        var user = await _userService.GetUserByIdAsync(userId);
+        var user = await _userService.GetUserById(userId);
         if (user == null || user.IsDeleted)
         {
             return Results.Unauthorized();

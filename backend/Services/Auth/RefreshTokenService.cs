@@ -32,7 +32,7 @@ public class RefreshTokenService
         {
             return null;
         }
-        return await _userService.GetUserByIdAsync(refreshToken.UserId);
+        return await _userService.GetUserById(refreshToken.UserId);
     }
 
     public async Task<string> AddRefreshToken(string userId)

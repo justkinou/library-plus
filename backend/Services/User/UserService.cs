@@ -5,11 +5,12 @@ using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace LibraryPlus.Services.User;
 
-public class UserService(IMongoDatabase db)
+public class UserService(IMongoDatabase db, NotificationService notificationService)
 {
     private readonly IMongoCollection<UserModel> _users = db.GetCollection<UserModel>("users");
+    private readonly NotificationService _notificationService = notificationService;
 
-    public async Task<UserModel?> GetUserByIdAsync(string id)
+    public async Task<UserModel?> GetUserById(string id)
     {
         return await (await _users.FindAsync(u => u.Id == id)).FirstOrDefaultAsync();
     }
@@ -79,6 +80,13 @@ public class UserService(IMongoDatabase db)
             Builders<UserModel>.Update.Set(u => u.PasswordHash, BCrypt.Net.BCrypt.HashPassword(newPassword))
         );
         return true;
+    }
+
+    public async Task SendAllUsersNotification(string text)
+    {
+        var allUsers = _users.Find(Builders<UserModel>.Filter.Empty);
+        var allUserIds = allUsers.ToEnumerable().Select(u => u.Id);
+        _notificationService.SendAllUsersNotification(allUserIds, text);
     }
 
 }
